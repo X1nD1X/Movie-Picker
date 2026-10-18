@@ -7,7 +7,7 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
 <style>
-:root{--bg:#0B0A12;--panel:#15131F;--panel2:#100E18;--line:#2B2740;--text:#ECEAF4;--muted:#9890B3;--amber:#A78BFA;--ink:#150F2B;--yes:#3FB68B;--no:#F0587A;--grad:linear-gradient(135deg,#8B5CF6,#EC4899)}
+:root{--bg:#0B0A12;--panel:#15131F;--panel2:#100E18;--line:#2B2740;--text:#ECEAF4;--muted:#9890B3;--amber:#A78BFA;--ink:#150F2B;--yes:#3FB68B;--no:#F0587A;--grad:linear-gradient(135deg,#8B5CF6,#EC4899);--pink:#F472B6;--blue:#7DB4F5}
 *{box-sizing:border-box}
 body{margin:0;min-height:100vh;color:var(--text);font:400 16px/1.5 Onest,system-ui,sans-serif;background:radial-gradient(ellipse at 50% -10%,#2A1B4A 0%,var(--bg) 55%) fixed,var(--bg)}
 .wrap{max-width:720px;margin:0 auto;padding:24px 16px 40px}
@@ -21,7 +21,7 @@ button{cursor:pointer}
 :focus-visible{outline:3px solid var(--amber);outline-offset:2px}
 .chips{display:flex;flex-wrap:wrap;gap:8px}
 .chips button,.seg button{background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 14px}
-.chips button[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--amber);border-color:var(--amber);color:var(--ink);font-weight:600}
+.chips button[aria-pressed=true]{background:var(--amber);border-color:var(--amber);color:var(--ink);font-weight:600}.chips button[data-act=mood][aria-pressed=true],.chips button[data-act=preset][aria-pressed=true]{background:var(--pink);border-color:var(--pink);color:#2B0A1B}.seg button[aria-pressed=true]{background:var(--blue);border-color:var(--blue);color:#0B1A33;font-weight:600}
 .seg{display:flex;flex-wrap:wrap;gap:8px}
 .seg.small button{padding:5px 12px;font-size:14px}
 .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px;margin-top:22px}
@@ -51,9 +51,14 @@ select,input[type=text]{background:var(--panel2);border:1px solid var(--line);bo
 .link{word-break:break-all;color:var(--muted);font-size:14px}
 footer{margin-top:28px;color:var(--muted);font-size:12px}
 .match{text-align:center}.match .mt{font:700 clamp(40px,12vw,72px)/1 Unbounded,sans-serif;color:var(--amber);margin:6px 0 4px;animation:pop .5s ease}.match .ticket{grid-template-columns:140px 1fr;text-align:left}.match .ov{display:block;-webkit-line-clamp:unset}@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}@media(prefers-reduced-motion:reduce){.match .mt{animation:none}}
-.layout{display:grid;gap:20px;grid-template-columns:1fr}#side h2:first-child{margin-top:0}.hero h2{font:700 clamp(22px,4vw,30px)/1.15 Unbounded,Onest,sans-serif;margin:0 0 10px;color:var(--text)}.card{position:relative;touch-action:pan-y;cursor:grab;user-select:none}.tag{position:absolute;top:16px;padding:4px 12px;border:3px solid;border-radius:8px;font:700 22px Unbounded,sans-serif;pointer-events:none;transform:rotate(-8deg);background:rgba(11,10,18,.6)}.lk{right:16px;color:var(--yes);opacity:var(--l,0)}.np{left:16px;color:var(--no);opacity:var(--n,0)}
-@media(min-width:900px){.wrap{max-width:1100px}.layout{grid-template-columns:minmax(300px,32%) 1fr;align-items:start}#side{position:sticky;top:16px;max-height:calc(100vh - 32px);overflow:auto}body.play #side{opacity:.45;pointer-events:none}}
-@media(max-width:899px){body.play #side{display:none}}
+.layout{display:block}#side h2:first-child{margin-top:0}.hero h2{font:700 clamp(22px,4vw,30px)/1.15 Unbounded,Onest,sans-serif;margin:0 0 10px;color:var(--text)}.card{position:relative;touch-action:pan-y;cursor:grab;user-select:none}.tag{position:absolute;top:16px;padding:4px 12px;border:3px solid;border-radius:8px;font:700 22px Unbounded,sans-serif;pointer-events:none;transform:rotate(-8deg);background:rgba(11,10,18,.6)}.lk{right:16px;color:var(--yes);opacity:var(--l,0)}.np{left:16px;color:var(--no);opacity:var(--n,0)}
+@keyframes inR{from{transform:translateX(60px);opacity:0}}@keyframes inL{from{transform:translateX(-60px);opacity:0}}@keyframes outL{to{transform:translateX(-80px);opacity:0}}
+#side{animation:inL .4s ease}#side.leave{animation:outL .35s ease forwards}#app{animation:inR .4s ease}#bar{display:none}
+body:not(.play) #app{display:none}body.play #side{display:none}body.play #bar{display:block;margin-bottom:12px;animation:inR .4s ease}
+.barbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}.hint{margin:10px 0 0;color:var(--muted);font-size:14px;text-align:center}.tags{color:var(--pink)}
+.card{isolation:isolate;margin-bottom:16px}.card::before,.card::after{content:'';position:absolute;z-index:-1;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.card::before{inset:8px 10px -8px}.card::after{inset:16px 22px -16px;opacity:.6}
+.heart{width:92px;height:92px;margin:0 auto 6px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:46px;color:#fff;animation:pop .5s ease}
+@media(prefers-reduced-motion:reduce){#side,#app,#bar,.heart{animation:none!important}}
 .hello{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;text-align:center;background:var(--bg);font:700 clamp(28px,8vw,56px)/1.15 Unbounded,Onest,sans-serif;animation:hi 6.5s ease forwards;cursor:pointer}
 @keyframes hi{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){.hello{animation:none}}
@@ -64,7 +69,7 @@ footer{margin-top:28px;color:var(--muted);font-size:12px}
 <div id="hello" class="hello" role="status">Привет! Что посмотрим?</div>
 <div class="wrap">
 <header><h1>What We Watch?</h1><p class="sub">YOUR NEXT MOVIE STARTS HERE.</p></header>
-<div class="layout"><aside id="side" class="panel"></aside><main id="app"></main></div>
+<div class="layout"><aside id="side" class="panel"></aside><div id="bar"><button class="barbtn" data-act="back">← Фильтры</button></div><main id="app"></main></div>
 <footer>Данные о фильмах: TMDB. Этот сайт использует API TMDB, но не одобрен и не сертифицирован TMDB.</footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -77,15 +82,16 @@ const GT = {10759:'Боевик и приключения',16:'Мультфил�
 const NAMES = {...GM, ...GT}, KIND = {movie:'Фильм', tv:'Сериал', anim:'Мультфильм'};
 const POP = {movie:[35,18,28,53,878,27,10749,16], tv:[35,18,10759,80,9648,10765]};
 // настроение: [жанры для фильмов, жанры для сериалов или null, если у сериалов нет подходящего жанра]
-const MOODS = {'😂 Посмеяться':[[35],[35]],'😱 Страшно':[[27],null],'💜 Романтика':[[10749],null],'🥹 До слёз':[[18],[18]],'🧠 Поломать голову':[[9648,53],[9648]],'🫣 Напряжение':[[53,80],[80,9648]],'✨ Магия':[[14],[10765]],'🚀 Другие миры':[[878],[10765]],'💥 Адреналин':[[28,12],[10759]],'🌿 Расслабиться':[[10751,35],[10751,35]],'🤯 Удиви нас':[[],[]]};
+const MOODS = {'😂 Посмеяться':[[35],[35]],'😱 Страшно':[[27],null],'💜 Романтика':[[10749],null],'😢 До слёз':[[18],[18]],'🧠 Поломать голову':[[9648,53],[9648]],'😬 Напряжение':[[53,80],[80,9648]],'✨ Магия':[[14],[10765]],'🚀 Другие миры':[[878],[10765]],'💥 Адреналин':[[28,12],[10759]],'🌿 Расслабиться':[[10751,35],[10751,35]],'🤯 Удиви нас':[[],[]]};
 const PRESETS = {'🍕 Лёгкий вечер':{g:[35,10751]},'❤️ Свидание':{g:[10749,35]},'👻 Ночь ужасов':{g:[27,53]},'🧠 Вечер загадок':{g:[9648,53,80]},'👨‍👩‍👧 Семейный':{g:[10751,35,12]},'🌌 Другие миры':{g:[878,14]},'🎞 Классика':{g:[],era:'1990',rating:'7'}};
 const RUNTIME = {'':['Любая',''],lt100:['До 100 мин','&with_runtime.lte=100'],mid:['100–130 мин','&with_runtime.gte=100&with_runtime.lte=130'],gt130:['От 130 мин','&with_runtime.gte=130']};
 const RATING = {'0':'Любой','6':'6 и выше','7':'7 и выше','8':'8 и выше'};
 const Y = new Date().getFullYear();
 const ERAS = {'':['Любые',''],1970:['1970-е','&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31'],1980:['1980-е','&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31'],1990:['1990-е','&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31'],2000:['2000-е','&primary_release_date.gte=2000-01-01&primary_release_date.lte=2009-12-31'],2010:['2010-е','&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31'],2020:['2020-е','&primary_release_date.gte=2020-01-01&primary_release_date.lte=2029-12-31'],now:['Этот год ('+Y+')','&primary_release_date.gte='+Y+'-01-01&primary_release_date.lte='+Y+'-12-31']};
+const hint = on => `<p class="hint">Тяните карточку вправо — «хочу», влево — «не хочу». Или нажмите кнопки.${on ? ' Если хочется обоим, будет «Мэтч!».' : ''}</p>`;
 const ALPH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', PFX = 'moviepick-';
 
-const s = {mode:'solo', gtab:'pop', kind:'movie', genres:new Set(), runtime:'', era:'', rating:'6', names:['','']};
+const s = {mode:'solo', gtab:'pop', kind:'movie', mood:null, preset:null, genres:new Set(), runtime:'', era:'', rating:'6', names:['','']};
 let v = null, o = null, peer = null, conn = null, joinTimer = null;
 const $ = q => document.querySelector(q);
 const app = $('#app');
@@ -98,9 +104,9 @@ function cleanup() { clearTimeout(joinTimer); try { conn && conn.close(); } catc
 
 function ticket(m) {
   const year = (m.release_date || '').slice(0, 4);
-  const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).join(', ');
+  const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).map(n => '# ' + n).join(' ');
   return `<article class="ticket"><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
-  <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc((KIND[m.k] || '') + ' ' + year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span>${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p></div></article>`;
+  <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc((KIND[m.k] || '') + ' ' + year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span class="tags">${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p></div></article>`;
 }
 
 function swipe(m) { return `<div class="card">${ticket(m)}<span class="tag lk">LIKE</span><span class="tag np">NOPE</span></div>`; }
@@ -111,10 +117,11 @@ function side() {
   const sel = (key, map) => Object.entries(map).map(([k, a]) => `<option value="${k}" ${String(s[key]) === k ? 'selected' : ''}>${Array.isArray(a) ? a[0] : a}</option>`).join('');
   $('#side').innerHTML = `
   <div class="seg" role="group" aria-label="Режим">${[['solo', 'Один'], ['duo', 'Вдвоём (один экран)'], ['online', 'Вдвоём (онлайн)']].map(([k, n]) => btn('mode', k, n, s.mode === k)).join('')}</div>
+  ${s.mode === 'online' ? `<h2>Войти в комнату друга</h2><div class="keyrow"><input type="text" id="jc" maxlength="5" autocapitalize="characters" placeholder="Код комнаты" aria-label="Код комнаты"><button data-act="join">Войти</button></div><p class="msg" style="margin:10px 0 0">Или создайте свою комнату: настройте подбор и нажмите кнопку внизу.</p>` : ''}
   ${s.mode === 'duo' ? `<div class="names"><label>Первый<input type="text" data-name="0" value="${esc(s.names[0])}" placeholder="Игрок 1"></label><label>Второй<input type="text" data-name="1" value="${esc(s.names[1])}" placeholder="Игрок 2"></label></div>` : ''}
   <h2>Что смотрим</h2><div class="seg small" role="group">${[['movie', '🎬 Фильмы'], ['tv', '📺 Сериалы'], ['anim', '🎨 Мультфильмы']].map(([k, n]) => btn('kind', k, n, s.kind === k)).join('')}</div>
-  <h2>Настроение</h2><div class="chips">${Object.entries(MOODS).filter(([, m]) => m[tv ? 1 : 0]).map(([n]) => btn('mood', n, n)).join('')}</div>
-  ${s.kind === 'movie' ? `<h2>Вечер</h2><div class="chips">${Object.keys(PRESETS).map(n => btn('preset', n, n)).join('')}</div>` : ''}
+  <h2>Настроение</h2><div class="chips">${Object.entries(MOODS).filter(([, m]) => m[tv ? 1 : 0]).map(([n]) => btn('mood', n, n, s.mood === n)).join('')}</div>
+  ${s.kind === 'movie' ? `<h2>Вечер</h2><div class="chips">${Object.keys(PRESETS).map(n => btn('preset', n, n, s.preset === n)).join('')}</div>` : ''}
   <h2>Жанры</h2>
   <div class="seg small" role="group" aria-label="Список жанров" style="margin-bottom:10px">${btn('gtab', 'pop', 'Популярные', s.gtab === 'pop')}${btn('gtab', 'all', 'Все жанры' + (s.genres.size ? ' (' + s.genres.size + ')' : ''), s.gtab === 'all')}</div>
   <div class="chips">${ids.map(id => btn('genre', id, names[id], s.genres.has(id))).join('')}</div>
@@ -125,13 +132,17 @@ function side() {
   </div>
   <button class="go" data-act="${s.mode === 'online' ? 'create' : 'go'}">${s.mode === 'online' ? 'Создать комнату' : s.mode === 'duo' ? 'Начать голосование' : 'Подобрать фильмы'}</button>`;
 }
+function enterPlay() {
+  const b = document.body;
+  $('#bar').firstChild.textContent = s.mode === 'online' ? '← Выйти из комнаты' : '← Фильтры';
+  if (b.classList.contains('play')) return;
+  $('#side').classList.add('leave');
+  setTimeout(() => { b.classList.add('play'); $('#side').classList.remove('leave'); }, 350);
+}
 function setup() {
   document.body.classList.remove('play');
   side();
-  const online = s.mode === 'online';
-  app.innerHTML = `<section class="panel hero"><h2>So, what are we watching tonight?</h2>
-  <p class="msg">Выберите настроение слева, и найдём что-нибудь на вечер. Свайп вправо или «Хочу» — да, влево или «Не хочу» — нет.</p>
-  ${online ? `<p class="msg">Вы оба видите один и тот же фильм. Если хочется обоим, появится «Мэтч!», иначе фильм пропускается.</p><h2 style="font-size:14px;color:var(--muted)">Войти в комнату друга</h2><div class="keyrow"><input type="text" id="jc" maxlength="5" autocapitalize="characters" placeholder="Код комнаты" aria-label="Код комнаты"><button data-act="join">Войти</button></div><p class="msg">Или создайте свою комнату кнопкой слева.</p>` : ''}</section>`;
+  app.innerHTML = '';
 }
 
 let lastTotal = 0;
@@ -149,15 +160,34 @@ async function fetchPage(page) {
   if (s.kind === 'anim' && s.genres.size) list = list.filter(m => m.genre_ids.some(g => s.genres.has(g)));
   return list;
 }
+const SK = 'wwy_seen_v1', TTL = 30 * 864e5, sk = m => (m.k === 'tv' ? 't' : 'm') + m.id;
+let resetNote = false;
+function seenLoad() { try { const d = JSON.parse(localStorage.getItem(SK) || '{}'), now = Date.now(); for (const k in d) if (now - d[k] > TTL) delete d[k]; return d; } catch (e) { return {}; } }
+function mark(list) { try { const d = seenLoad(), now = Date.now(); list.forEach(m => d[sk(m)] = now); localStorage.setItem(SK, JSON.stringify(d)); } catch (e) {} }
+function pager() {
+  const P = {pages: null, cache: {}, seen: seenLoad(), sess: new Set()};
+  P.next = async () => {
+    if (!P.pages) { P.cache[1] = await fetchPage(1); P.pages = shuffle(Array.from({length: Math.min(lastTotal, 25)}, (_, k) => k + 1)); }
+    while (P.pages.length) {
+      const pg = P.pages.shift();
+      const list = (P.cache[pg] || await fetchPage(pg)).filter(m => !P.seen[sk(m)] && !P.sess.has(sk(m)));
+      if (list.length) { list.forEach(m => P.sess.add(sk(m))); return shuffle(list); }
+    }
+    return [];
+  };
+  return P;
+}
 async function fetchDeck(n) {
-  let list = await fetchPage(1 + Math.floor(Math.random() * 5));
-  if (list.length < 8) list = await fetchPage(1);
-  return shuffle(list).slice(0, n);
+  const fill = async P => { const got = []; while (got.length < n) { const l = await P.next(); if (!l.length) break; got.push(...l); } return got; };
+  resetNote = false;
+  let got = await fill(pager());
+  if (!got.length) { resetNote = true; const P = pager(); P.seen = {}; got = await fill(P); }
+  got = got.slice(0, n); mark(got); return got;
 }
 const none = () => panel('<p class="msg">По этим условиям ничего не нашлось. Снимите часть жанров или понизьте рейтинг.</p><button class="btn" data-act="back">Изменить фильтры</button>');
 
 async function go() {
-  document.body.classList.add('play');
+  enterPlay();
   panel('<p class="msg">Загружаем фильмы…</p>');
   try {
     const list = await fetchDeck(20);
@@ -168,13 +198,13 @@ async function go() {
 }
 
 function results(list) {
-  panel(`<p class="prog">Найдено: ${list.length}</p>${list.map(ticket).join('')}
+  panel(`<p class="prog">Найдено: ${list.length}</p>${resetNote ? '<p class="msg">Вы посмотрели всё по этим фильтрам, начинаем сначала.</p>' : ''}${list.map(ticket).join('')}
   <button class="btn" data-act="go">Подобрать другие</button><button class="btn alt" data-act="back">Изменить фильтры</button>`);
 }
 
 function vote() {
   const m = v.deck[v.i];
-  app.innerHTML = `<section class="panel vote"><p class="prog">${esc(v.online ? 'Ваш выбор' : nm(v.p))}: фильм ${v.i + 1} из ${v.deck.length}</p>${swipe(m)}
+  app.innerHTML = `<section class="panel vote"><p class="prog">${esc(v.online ? 'Ваш выбор' : nm(v.p))}: фильм ${v.i + 1} из ${v.deck.length}</p>${v.i === 0 && v.p === 0 ? hint(false) : ''}${swipe(m)}
   <div class="vbtns"><button class="no" data-act="no">Не хочу</button><button class="yes" data-act="yes">Хочу</button></div></section>`;
 }
 
@@ -194,7 +224,7 @@ function answer(like) {
 }
 
 // ---- Онлайн-режим: бесконечная лента, оба видят один фильм (WebRTC через PeerJS) ----
-const newO = host => ({q: [], i: 0, mine: {}, theirs: {}, matches: [], host, seen: new Set(), pages: null, cache: {}, loading: false, exhausted: false, inMatch: false, finished: false, err: ''});
+const newO = host => ({q: [], i: 0, mine: {}, theirs: {}, matches: [], host, P: null, reset: false, loading: false, exhausted: false, inMatch: false, finished: false, err: ''});
 const send = m => { try { conn && conn.send(m); } catch (e) {} };
 
 async function more() {
@@ -202,18 +232,10 @@ async function more() {
   if (!me || !me.host || me.loading || me.exhausted) return;
   me.loading = true;
   try {
-    if (!me.pages) {
-      me.cache[1] = await fetchPage(1);
-      me.pages = shuffle(Array.from({length: Math.min(lastTotal, 25)}, (_, k) => k + 1));
-    }
-    let got = [];
-    while (!got.length && me.pages.length) {
-      const p = me.pages.shift();
-      const list = (me.cache[p] || await fetchPage(p)).filter(m => !me.seen.has(m.id));
-      list.forEach(m => me.seen.add(m.id));
-      got = shuffle(list);
-    }
-    if (got.length) { me.q.push(...got); send({t: 'movies', list: got}); }
+    if (!me.P) me.P = pager();
+    let got = await me.P.next();
+    if (!got.length && !me.reset) { me.reset = true; const sess = me.P.sess; me.P = pager(); me.P.seen = {}; me.P.sess = sess; got = await me.P.next(); }
+    if (got.length) { me.q.push(...got); mark(got); send({t: 'movies', list: got}); }
     else { me.exhausted = true; send({t: 'exh'}); }
   } catch (e) { me.err = e.message; me.exhausted = true; send({t: 'exh'}); }
   me.loading = false;
@@ -234,7 +256,7 @@ function onv() {
   const m = o.q[o.i], fin = '<button class="btn alt" data-act="finish">Закончить</button>';
   if (!m) return panel(`<p class="msg">${o.exhausted ? 'Фильмы по вашим условиям закончились.' : 'Загружаем следующие фильмы…'}</p>${fin}`);
   if (o.mine[o.i] !== undefined) return panel(`<p class="prog">Мэтчей: ${o.matches.length}</p>${ticket(m)}<p class="msg">Ждём выбор партнёра…</p>${fin}`);
-  app.innerHTML = `<section class="panel vote"><p class="prog">Мэтчей: ${o.matches.length}</p>${swipe(m)}
+  app.innerHTML = `<section class="panel vote"><p class="prog">Мэтчей: ${o.matches.length}</p>${o.i === 0 ? hint(true) : ''}${swipe(m)}
   <div class="vbtns"><button class="no" data-act="ono">Не хочу</button><button class="yes" data-act="oyes">Хочу</button></div>${fin}</section>`;
 }
 
@@ -245,7 +267,7 @@ function ovote(like) {
 
 function showMatch(m) {
   o.inMatch = true;
-  panel(`<div class="match"><h2 class="mt">Мэтч!</h2><p class="msg">Вам обоим хочется посмотреть этот фильм.</p>${ticket(m)}
+  panel(`<div class="match"><div class="heart">♥</div><h2 class="mt">Мэтч!</h2><p class="msg">Вам обоим хочется посмотреть этот фильм.</p>${ticket(m)}
   <button class="btn" data-act="mnext">Искать дальше</button><button class="btn alt" data-act="finish">Закончить</button></div>`);
 }
 
@@ -269,7 +291,7 @@ function onData(m) {
 function onClose() { if (o && !o.finished) { o.finished = true; showFinal('Партнёр отключился.'); } }
 
 async function create() {
-  document.body.classList.add('play');
+  enterPlay();
   if (typeof Peer === 'undefined') return fail('Не загрузилась библиотека связи (PeerJS). Проверьте интернет.');
   panel('<p class="msg">Готовим комнату…</p>');
   o = newO(true);
@@ -291,7 +313,7 @@ async function create() {
 }
 
 function join(code) {
-  document.body.classList.add('play');
+  enterPlay();
   code = (code || '').trim().toUpperCase();
   if (!code) return;
   if (typeof Peer === 'undefined') return fail('Не загрузилась библиотека связи (PeerJS). Проверьте интернет.');
@@ -307,10 +329,10 @@ const clickAll = e => {
   const a = b.dataset.act, x = b.dataset.v;
   if (a === 'mode') { s.mode = x; setup(); }
   else if (a === 'gtab') { s.gtab = x; side(); }
-  else if (a === 'kind') { s.kind = x; const kg = kindGenres(); s.genres = new Set([...s.genres].filter(id => kg.includes(id))); side(); }
-  else if (a === 'mood') { s.genres = new Set(MOODS[x][s.kind === 'tv' ? 1 : 0]); side(); }
-  else if (a === 'preset') { const pr = PRESETS[x]; s.genres = new Set(pr.g); if (pr.era) s.era = pr.era; if (pr.rating) s.rating = pr.rating; side(); }
-  else if (a === 'genre') { const id = +x; s.genres.has(id) ? s.genres.delete(id) : s.genres.add(id); side(); }
+  else if (a === 'kind') { s.kind = x; s.mood = s.preset = null; const kg = kindGenres(); s.genres = new Set([...s.genres].filter(id => kg.includes(id))); side(); }
+  else if (a === 'mood') { if (s.mood === x) { s.mood = null; s.genres = new Set(); } else { s.mood = x; s.preset = null; s.genres = new Set(MOODS[x][s.kind === 'tv' ? 1 : 0]); } side(); }
+  else if (a === 'preset') { if (s.preset === x) { s.preset = null; s.genres = new Set(); } else { const pr = PRESETS[x]; s.preset = x; s.mood = null; s.genres = new Set(pr.g); if (pr.era) s.era = pr.era; if (pr.rating) s.rating = pr.rating; } side(); }
+  else if (a === 'genre') { s.mood = s.preset = null; const id = +x; s.genres.has(id) ? s.genres.delete(id) : s.genres.add(id); side(); }
   else if (a === 'go') go();
   else if (a === 'create') create();
   else if (a === 'join') join($('#jc').value);
@@ -326,7 +348,7 @@ const clickAll = e => {
 };
 const changeAll = e => { if (e.target.dataset.sel) s[e.target.dataset.sel] = e.target.value; };
 const inputAll = e => { if (e.target.dataset.name) s.names[+e.target.dataset.name] = e.target.value; };
-[app, $('#side')].forEach(el => { el.addEventListener('click', clickAll); el.addEventListener('change', changeAll); el.addEventListener('input', inputAll); });
+[app, $('#side'), $('#bar')].forEach(el => { el.addEventListener('click', clickAll); el.addEventListener('change', changeAll); el.addEventListener('input', inputAll); });
 
 let drag = null;
 app.addEventListener('pointerdown', e => { const c = e.target.closest('.card'); if (!c || e.target.closest('button')) return; drag = {c, x: e.clientX, dx: 0}; c.setPointerCapture(e.pointerId); c.style.transition = 'none'; });
