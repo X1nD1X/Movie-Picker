@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Что смотрим сегодня?</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
+<style>
+:root{--bg:#0A0C12;--panel:#141824;--panel2:#0F121B;--line:#272D40;--text:#E6E8EE;--muted:#8B93A7;--amber:#E8B04A;--ink:#1A1204;--yes:#3FB68B;--no:#D9566A}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;color:var(--text);font:400 16px/1.5 Onest,system-ui,sans-serif;background:radial-gradient(ellipse at 50% -10%,#1B2136 0%,var(--bg) 55%) fixed,var(--bg)}
+.wrap{max-width:720px;margin:0 auto;padding:24px 16px 40px}
+h1{font:700 clamp(26px,6vw,40px)/1.1 Unbounded,Onest,sans-serif;margin:8px 0}
+h2{font:500 14px/1.2 Unbounded,Onest,sans-serif;margin:22px 0 10px;color:var(--muted)}
+h3{font:600 18px/1.25 Onest,sans-serif;margin:0 0 4px}
+.sub{color:var(--muted);margin:0 0 20px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px}
+button,select,input{font:inherit;color:inherit}
+button{cursor:pointer}
+:focus-visible{outline:3px solid var(--amber);outline-offset:2px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chips button,.seg button{background:transparent;border:1px solid var(--line);border-radius:999px;padding:7px 14px}
+.chips button[aria-pressed=true],.seg button[aria-pressed=true]{background:var(--amber);border-color:var(--amber);color:var(--ink);font-weight:600}
+.seg{display:flex;flex-wrap:wrap;gap:8px}
+.seg.small button{padding:5px 12px;font-size:14px}
+.row{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:22px}
+label{display:flex;flex-direction:column;gap:6px;color:var(--muted);font-size:14px}
+select,input[type=text]{background:var(--panel2);border:1px solid var(--line);border-radius:10px;padding:10px 12px;color:var(--text)}
+.names{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.go,.btn{background:var(--amber);color:var(--ink);border:0;border-radius:12px;padding:14px 20px;font-weight:600;width:100%;margin-top:24px}
+.btn.alt{background:transparent;color:var(--text);border:1px solid var(--line);margin-top:10px}
+.ticket{display:grid;grid-template-columns:110px 1fr;gap:14px;background:var(--panel2);border:1px solid var(--line);border-radius:12px;padding:12px;margin-top:12px}
+.ticket img{width:100%;border-radius:8px;display:block;background:var(--panel)}
+.info{border-left:2px dashed var(--line);padding-left:14px;min-width:0}
+.meta{display:flex;flex-wrap:wrap;gap:4px 12px;color:var(--muted);font-size:14px;margin:0 0 6px}
+.star{color:var(--amber);font-weight:600}
+.ov{margin:0;font-size:14px;display:-webkit-box;-webkit-line-clamp:5;-webkit-box-orient:vertical;overflow:hidden}
+.vote .ticket{grid-template-columns:140px 1fr}
+.vote .ov{-webkit-line-clamp:9}
+.prog{margin:0;color:var(--muted)}
+.vbtns{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:16px}
+.vbtns button{border:0;border-radius:12px;padding:16px;font-weight:600;font-size:17px}
+.no{background:var(--no);color:#fff}.yes{background:var(--yes);color:#06241D}
+.msg{color:var(--muted)}.err{color:#FFB3BE}
+.box{background:var(--panel);border:1px dashed var(--amber);border-radius:12px;padding:14px;margin-bottom:16px}
+.box p{margin:0 0 10px;font-size:14px}
+.keyrow{display:flex;gap:8px}.keyrow input{flex:1;min-width:0}
+.keyrow button{background:var(--amber);color:var(--ink);border:0;border-radius:10px;padding:0 16px;font-weight:600}
+.code{font:700 40px/1 Unbounded,sans-serif;letter-spacing:.12em;margin:12px 0;color:var(--amber)}
+.link{word-break:break-all;color:var(--muted);font-size:14px}
+footer{margin-top:28px;color:var(--muted);font-size:12px}
+.hello{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;text-align:center;background:var(--bg);font:700 clamp(28px,8vw,56px)/1.15 Unbounded,Onest,sans-serif;animation:hi 6.5s ease forwards;cursor:pointer}
+@keyframes hi{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0;visibility:hidden}}
+@media(prefers-reduced-motion:reduce){.hello{animation:none}}
+@media(max-width:480px){.ticket{grid-template-columns:90px 1fr}.vote .ticket{grid-template-columns:110px 1fr}.row,.names{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div id="hello" class="hello" role="status">Привет! Что посмотрим?</div>
+<div class="wrap">
+<header><h1>Что смотрим сегодня?</h1><p class="sub">Подберите фильм по настроению, жанру и длительности: одному или вдвоём.</p></header>
+<main id="app"></main>
+<footer>Данные о фильмах: TMDB. Этот сайт использует API TMDB, но не одобрен и не сертифицирован TMDB.</footer>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
+<script>
+// Адрес вашего прокси (Cloudflare Worker), без слэша в конце. Ключ TMDB хранится только на нём, в коде сайта ключа нет.
+const API = 'https://ВАШ-ВОРКЕР.workers.dev';
+
+const GENRES = {28:'Боевик',12:'Приключения',16:'Мультфильм',35:'Комедия',80:'Криминал',99:'Документальный',18:'Драма',10751:'Семейный',14:'Фэнтези',36:'История',27:'Ужасы',10402:'Музыка',9648:'Детектив',10749:'Мелодрама',878:'Фантастика',53:'Триллер',10752:'Военный',37:'Вестерн'};
+const POPULAR = [35,18,28,53,878,27,10749,16];
+const MOODS = {'Расслабиться':[35,10751,10749,16],'Напряжение':[53,27,9648,80],'Подумать':[18,878,36,99],'Адреналин':[28,12,878,10752]};
+const RUNTIME = {'':['Любая',''],lt100:['До 100 мин','&with_runtime.lte=100'],mid:['100–130 мин','&with_runtime.gte=100&with_runtime.lte=130'],gt130:['От 130 мин','&with_runtime.gte=130']};
+const RATING = {'0':'Любой','6':'6 и выше','7':'7 и выше','8':'8 и выше'};
+const ALPH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', PFX = 'moviepick-';
+
+const s = {mode:'solo', gtab:'pop', genres:new Set(), runtime:'', rating:'6', names:['','']};
+let v = null, peer = null, conn = null, joinTimer = null;
+const $ = q => document.querySelector(q);
+const app = $('#app');
+const esc = t => String(t ?? '').replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const nm = p => s.names[p].trim() || 'Игрок ' + (p + 1);
+const shuffle = a => { for (let i = a.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [a[i], a[j]] = [a[j], a[i]]; } return a; };
+const panel = h => app.innerHTML = `<section class="panel">${h}</section>`;
+const fail = msg => panel(`<p class="err">${esc(msg)}</p><button class="btn" data-act="back">Назад</button>`);
+function cleanup() { clearTimeout(joinTimer); try { conn && conn.close(); } catch (e) {} try { peer && peer.destroy(); } catch (e) {} conn = peer = v = null; }
+
+function ticket(m) {
+  const year = (m.release_date || '').slice(0, 4);
+  const g = (m.genre_ids || []).map(id => GENRES[id]).filter(Boolean).slice(0, 3).join(', ');
+  return `<article class="ticket"><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
+  <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc(year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span>${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p></div></article>`;
+}
+
+function setup() {
+  const online = s.mode === 'online', ids = s.gtab === 'pop' ? POPULAR : Object.keys(GENRES).map(Number);
+  app.innerHTML = `
+  <section class="panel">
+    <div class="seg" role="group" aria-label="Режим">
+      <button data-act="mode" data-v="solo" aria-pressed="${s.mode === 'solo'}">Один</button>
+      <button data-act="mode" data-v="duo" aria-pressed="${s.mode === 'duo'}">Вдвоём (один экран)</button>
+      <button data-act="mode" data-v="online" aria-pressed="${online}">Вдвоём (онлайн)</button>
+    </div>
+    ${s.mode === 'duo' ? `<div class="names"><label>Первый<input type="text" data-name="0" value="${esc(s.names[0])}" placeholder="Игрок 1"></label><label>Второй<input type="text" data-name="1" value="${esc(s.names[1])}" placeholder="Игрок 2"></label></div>` : ''}
+    ${online ? `<h2>Войти в комнату друга</h2><div class="keyrow"><input type="text" id="jc" maxlength="5" autocapitalize="characters" placeholder="Код комнаты" aria-label="Код комнаты"><button data-act="join">Войти</button></div><h2>Или создайте свою</h2>` : ''}
+    <h2>Настроение</h2>
+    <div class="chips">${Object.keys(MOODS).map(n => `<button data-act="mood" data-v="${n}">${n}</button>`).join('')}</div>
+    <h2>Жанры</h2>
+    <div class="seg small" role="group" aria-label="Список жанров" style="margin-bottom:10px">
+      <button data-act="gtab" data-v="pop" aria-pressed="${s.gtab === 'pop'}">Популярные</button>
+      <button data-act="gtab" data-v="all" aria-pressed="${s.gtab === 'all'}">Все жанры${s.genres.size ? ' (' + s.genres.size + ')' : ''}</button>
+    </div>
+    <div class="chips">${ids.map(id => `<button data-act="genre" data-v="${id}" aria-pressed="${s.genres.has(id)}">${GENRES[id]}</button>`).join('')}</div>
+    <div class="row">
+      <label>Длительность<select data-sel="runtime">${Object.entries(RUNTIME).map(([k, a]) => `<option value="${k}" ${s.runtime === k ? 'selected' : ''}>${a[0]}</option>`).join('')}</select></label>
+      <label>Рейтинг TMDB<select data-sel="rating">${Object.entries(RATING).map(([k, n]) => `<option value="${k}" ${s.rating === k ? 'selected' : ''}>${n}</option>`).join('')}</select></label>
+    </div>
+    <button class="go" data-act="${online ? 'create' : 'go'}">${online ? 'Создать комнату' : s.mode === 'duo' ? 'Начать голосование' : 'Подобрать фильмы'}</button>
+  </section>`;
+}
+
+async function fetchDeck(n) {
+  const url = page => `${API}/discover/movie?language=ru-RU&include_adult=false&sort_by=popularity.desc&vote_count.gte=300&page=${page}`
+    + (+s.rating ? `&vote_average.gte=${s.rating}` : '') + (s.genres.size ? `&with_genres=${[...s.genres].join('|')}` : '') + RUNTIME[s.runtime][1];
+  const get = async page => {
+    const r = await fetch(url(page)), d = await r.json();
+    if (!r.ok) throw new Error(d.status_message || 'Ошибка ' + r.status);
+    return (d.results || []).filter(m => m.poster_path && m.overview);
+  };
+  let list = await get(1 + Math.floor(Math.random() * 5));
+  if (list.length < 8) list = await get(1);
+  return shuffle(list).slice(0, n).map(m => ({id: m.id, title: m.title, release_date: m.release_date, vote_average: m.vote_average, genre_ids: m.genre_ids, overview: m.overview, poster_path: m.poster_path}));
+}
+const none = () => panel('<p class="msg">По этим условиям ничего не нашлось. Снимите часть жанров или понизьте рейтинг.</p><button class="btn" data-act="back">Изменить фильтры</button>');
+
+async function go() {
+  panel('<p class="msg">Загружаем фильмы…</p>');
+  try {
+    const list = await fetchDeck(s.mode === 'solo' ? 20 : 12);
+    if (!list.length) return none();
+    if (s.mode === 'solo') results(list);
+    else { v = {deck: list, i: 0, p: 0, likes: [new Set(), new Set()], online: false}; vote(); }
+  } catch (e) { fail('Не удалось загрузить фильмы: ' + e.message + '. Проверьте интернет и попробуйте позже.'); }
+}
+
+function results(list) {
+  panel(`<p class="prog">Найдено: ${list.length}</p>${list.map(ticket).join('')}
+  <button class="btn" data-act="go">Подобрать другие</button><button class="btn alt" data-act="back">Изменить фильтры</button>`);
+}
+
+function vote() {
+  const m = v.deck[v.i];
+  app.innerHTML = `<section class="panel vote"><p class="prog">${esc(v.online ? 'Ваш выбор' : nm(v.p))}: фильм ${v.i + 1} из ${v.deck.length}</p>${ticket(m)}
+  <div class="vbtns"><button class="no" data-act="no">Не хочу</button><button class="yes" data-act="yes">Хочу</button></div></section>`;
+}
+
+function showMatches(hit) {
+  panel(`<h3>${hit.length ? 'Совпадения: ' + hit.length : 'Совпадений нет'}</h3>
+  ${hit.length ? hit.map(ticket).join('') : '<p class="msg">Ни один фильм не понравился обоим. Попробуйте новую подборку или измените жанры.</p>'}
+  <button class="btn" data-act="${v.online ? 'back' : 'go'}">${v.online ? 'Новая комната' : 'Новая подборка'}</button>${v.online ? '' : '<button class="btn alt" data-act="back">Изменить фильтры</button>'}`);
+}
+
+function finishOnline() { showMatches(v.deck.filter(m => v.likes[0].has(m.id) && v.other.has(m.id))); }
+
+function answer(like) {
+  if (like) v.likes[v.p].add(v.deck[v.i].id);
+  v.i++;
+  if (v.i < v.deck.length) return vote();
+  if (v.online) {
+    v.done = true;
+    try { conn.send({t: 'done', likes: [...v.likes[0]]}); } catch (e) {}
+    return v.other ? finishOnline() : panel('<p>Вы закончили. Ждём, когда партнёр сделает выбор…</p><button class="btn alt" data-act="back">Выйти</button>');
+  }
+  if (v.p === 0) panel(`<p>${esc(nm(0))}, готово. Передайте устройство: ${esc(nm(1))}.</p><button class="btn" data-act="next">Я готов(а), начать</button>`);
+  else showMatches(v.deck.filter(m => v.likes[0].has(m.id) && v.likes[1].has(m.id)));
+}
+
+// ---- Онлайн-режим (WebRTC через PeerJS, без собственного сервера) ----
+function newOnline(deck) { v = {deck, i: 0, p: 0, likes: [new Set(), new Set()], online: true, done: false, other: null}; }
+function onData(m) {
+  if (m.t === 'deck') { clearTimeout(joinTimer); newOnline(m.deck); vote(); }
+  else if (m.t === 'done' && v) { v.other = new Set(m.likes); if (v.done) finishOnline(); }
+}
+function onClose() { if (v && v.online && !(v.done && v.other)) fail('Партнёр отключился.'); }
+
+async function create() {
+  if (typeof Peer === 'undefined') return fail('Не загрузилась библиотека связи (PeerJS). Проверьте интернет.');
+  panel('<p class="msg">Готовим комнату…</p>');
+  let deck;
+  try { deck = await fetchDeck(12); } catch (e) { return fail('Не удалось загрузить фильмы: ' + e.message); }
+  if (!deck.length) return none();
+  const code = Array.from({length: 5}, () => ALPH[Math.floor(Math.random() * ALPH.length)]).join('');
+  const link = location.href.split('#')[0] + '#' + code;
+  peer = new Peer(PFX + code);
+  peer.on('open', () => panel(`<h3>Комната создана</h3><p class="msg">Партнёр открывает сайт, выбирает «Вдвоём (онлайн)» и вводит код. Или отправьте ему ссылку.</p>
+    <div class="code">${code}</div><p class="link">${esc(link)}</p>
+    <button class="btn" data-act="copy" data-v="${esc(link)}">Скопировать ссылку</button><button class="btn alt" data-act="back">Отмена</button><p class="msg" style="margin-top:14px">Ждём партнёра…</p>`));
+  peer.on('connection', c => {
+    if (conn) return c.close();
+    conn = c;
+    c.on('open', () => { c.send({t: 'deck', deck}); newOnline(deck); vote(); });
+    c.on('data', onData); c.on('close', onClose);
+  });
+  peer.on('error', e => fail('Ошибка соединения: ' + e.type + '. Попробуйте ещё раз.'));
+}
+
+function join(code) {
+  code = (code || '').trim().toUpperCase();
+  if (!code) return;
+  if (typeof Peer === 'undefined') return fail('Не загрузилась библиотека связи (PeerJS). Проверьте интернет.');
+  panel('<p class="msg">Подключаемся…</p>');
+  joinTimer = setTimeout(() => fail('Не удалось подключиться. Проверьте код и что партнёр не закрыл страницу.'), 15000);
+  peer = new Peer();
+  peer.on('open', () => { conn = peer.connect(PFX + code, {reliable: true}); conn.on('data', onData); conn.on('close', onClose); });
+  peer.on('error', e => { clearTimeout(joinTimer); fail(e.type === 'peer-unavailable' ? 'Комната с таким кодом не найдена.' : 'Ошибка соединения: ' + e.type); });
+}
+
+app.addEventListener('click', e => {
+  const b = e.target.closest('[data-act]'); if (!b) return;
+  const a = b.dataset.act, x = b.dataset.v;
+  if (a === 'mode') { s.mode = x; setup(); }
+  else if (a === 'gtab') { s.gtab = x; setup(); }
+  else if (a === 'mood') { s.genres = new Set(MOODS[x]); setup(); }
+  else if (a === 'genre') { const id = +x; s.genres.has(id) ? s.genres.delete(id) : s.genres.add(id); setup(); }
+  else if (a === 'go') go();
+  else if (a === 'create') create();
+  else if (a === 'join') join($('#jc').value);
+  else if (a === 'back') { cleanup(); setup(); }
+  else if (a === 'yes') answer(true);
+  else if (a === 'no') answer(false);
+  else if (a === 'next') { v.p = 1; v.i = 0; vote(); }
+  else if (a === 'copy') { navigator.clipboard.writeText(x).then(() => b.textContent = 'Скопировано').catch(() => {}); }
+});
+app.addEventListener('change', e => { if (e.target.dataset.sel) s[e.target.dataset.sel] = e.target.value; });
+app.addEventListener('input', e => { if (e.target.dataset.name) s.names[+e.target.dataset.name] = e.target.value; });
+
+const hello = $('#hello');
+hello.addEventListener('click', () => hello.remove());
+const hash = location.hash.slice(1);
+if (hash) { hello.remove(); s.mode = 'online'; join(hash); }
+else { setup(); setTimeout(() => hello.remove(), 6500); }
+</script>
+</body>
+</html>
