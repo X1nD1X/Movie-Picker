@@ -55,7 +55,7 @@ footer{margin-top:28px;color:var(--muted);font-size:12px}
 @keyframes inR{from{transform:translateX(60px);opacity:0}}@keyframes inL{from{transform:translateX(-60px);opacity:0}}@keyframes outL{to{transform:translateX(-80px);opacity:0}}
 #side{animation:inL .4s ease}#side.leave{animation:outL .35s ease forwards}#app{animation:inR .4s ease}#bar{display:none}
 body:not(.play) #app{display:none}body.play #side{display:none}body.play #bar{display:block;margin-bottom:12px;animation:inR .4s ease}
-.barbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}.hint{margin:10px 0 0;color:var(--muted);font-size:14px;text-align:center}.tags{color:var(--pink)}
+.barbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}.hint{margin:10px 0 0;color:var(--muted);font-size:14px;text-align:center}.tags{color:var(--pink)}.rnd{width:100%;margin-top:14px;background:transparent;border:1px dashed var(--pink);color:var(--pink);border-radius:12px;padding:10px}
 .card{isolation:isolate;margin-bottom:16px}.card::before,.card::after{content:'';position:absolute;z-index:-1;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.card::before{inset:8px 10px -8px}.card::after{inset:16px 22px -16px;opacity:.6}
 .heart{width:92px;height:92px;margin:0 auto 6px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:46px;color:#fff;animation:pop .5s ease}
 @media(prefers-reduced-motion:reduce){#side,#app,#bar,.heart{animation:none!important}}
@@ -82,13 +82,14 @@ const GT = {10759:'Боевик и приключения',16:'Мультфил�
 const NAMES = {...GM, ...GT}, KIND = {movie:'Фильм', tv:'Сериал', anim:'Мультфильм'};
 const POP = {movie:[35,18,28,53,878,27,10749,16], tv:[35,18,10759,80,9648,10765]};
 // настроение: [жанры для фильмов, жанры для сериалов или null, если у сериалов нет подходящего жанра]
-const MOODS = {'😂 Посмеяться':[[35],[35]],'😱 Страшно':[[27],null],'💜 Романтика':[[10749],null],'😢 До слёз':[[18],[18]],'🧠 Поломать голову':[[9648,53],[9648]],'😬 Напряжение':[[53,80],[80,9648]],'✨ Магия':[[14],[10765]],'🚀 Другие миры':[[878],[10765]],'💥 Адреналин':[[28,12],[10759]],'🌿 Расслабиться':[[10751,35],[10751,35]],'🤯 Удиви нас':[[],[]]};
+const MOODS = {'😂 Посмеяться':[[35],[35]],'😱 Страшно':[[27],null],'💜 Романтика':[[10749],null],'😢 До слёз':[[18],[18]],'🧠 Поломать голову':[[9648,53],[9648]],'😬 Напряжение':[[53,80],[80,9648]],'✨ Магия':[[14],[10765]],'🚀 Другие миры':[[878],[10765]],'💥 Адреналин':[[28,12],[10759]],'🌿 Расслабиться':[[10751,35],[10751,35]]};
 const PRESETS = {'🍕 Лёгкий вечер':{g:[35,10751]},'❤️ Свидание':{g:[10749,35]},'👻 Ночь ужасов':{g:[27,53]},'🧠 Вечер загадок':{g:[9648,53,80]},'👨‍👩‍👧 Семейный':{g:[10751,35,12]},'🌌 Другие миры':{g:[878,14]},'🎞 Классика':{g:[],era:'1990',rating:'7'}};
 const RUNTIME = {'':['Любая',''],lt100:['До 100 мин','&with_runtime.lte=100'],mid:['100–130 мин','&with_runtime.gte=100&with_runtime.lte=130'],gt130:['От 130 мин','&with_runtime.gte=130']};
 const RATING = {'0':'Любой','6':'6 и выше','7':'7 и выше','8':'8 и выше'};
 const Y = new Date().getFullYear();
 const ERAS = {'':['Любые',''],1970:['1970-е','&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31'],1980:['1980-е','&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31'],1990:['1990-е','&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31'],2000:['2000-е','&primary_release_date.gte=2000-01-01&primary_release_date.lte=2009-12-31'],2010:['2010-е','&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31'],2020:['2020-е','&primary_release_date.gte=2020-01-01&primary_release_date.lte=2029-12-31'],now:['Этот год ('+Y+')','&primary_release_date.gte='+Y+'-01-01&primary_release_date.lte='+Y+'-12-31']};
 const hint = on => `<p class="hint">Тяните карточку вправо — «хочу», влево — «не хочу». Или нажмите кнопки.${on ? ' Если хочется обоим, будет «Мэтч!».' : ''}</p>`;
+const KW = {movie: 'фильм', tv: 'сериал', anim: 'мультфильм'};
 const ALPH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', PFX = 'moviepick-';
 
 const s = {mode:'solo', gtab:'pop', kind:'movie', mood:null, preset:null, genres:new Set(), runtime:'', era:'', rating:'6', names:['','']};
@@ -121,6 +122,7 @@ function side() {
   ${s.mode === 'duo' ? `<div class="names"><label>Первый<input type="text" data-name="0" value="${esc(s.names[0])}" placeholder="Игрок 1"></label><label>Второй<input type="text" data-name="1" value="${esc(s.names[1])}" placeholder="Игрок 2"></label></div>` : ''}
   <h2>Что смотрим</h2><div class="seg small" role="group">${[['movie', '🎬 Фильмы'], ['tv', '📺 Сериалы'], ['anim', '🎨 Мультфильмы']].map(([k, n]) => btn('kind', k, n, s.kind === k)).join('')}</div>
   <h2>Настроение</h2><div class="chips">${Object.entries(MOODS).filter(([, m]) => m[tv ? 1 : 0]).map(([n]) => btn('mood', n, n, s.mood === n)).join('')}</div>
+  <button class="rnd" data-act="random">🎲 Случайный ${KW[s.kind]}</button>
   ${s.kind === 'movie' ? `<h2>Вечер</h2><div class="chips">${Object.keys(PRESETS).map(n => btn('preset', n, n, s.preset === n)).join('')}</div>` : ''}
   <h2>Жанры</h2>
   <div class="seg small" role="group" aria-label="Список жанров" style="margin-bottom:10px">${btn('gtab', 'pop', 'Популярные', s.gtab === 'pop')}${btn('gtab', 'all', 'Все жанры' + (s.genres.size ? ' (' + s.genres.size + ')' : ''), s.gtab === 'all')}</div>
@@ -253,7 +255,7 @@ function step() {
 }
 
 function onv() {
-  const m = o.q[o.i], fin = '<button class="btn alt" data-act="finish">Закончить</button>';
+  const m = o.q[o.i], fin = (o.matches.length ? '<button class="btn alt" data-act="mlist">Мои мэтчи (' + o.matches.length + ')</button>' : '') + '<button class="btn alt" data-act="finish">Закончить подбор</button>';
   if (!m) return panel(`<p class="msg">${o.exhausted ? 'Фильмы по вашим условиям закончились.' : 'Загружаем следующие фильмы…'}</p>${fin}`);
   if (o.mine[o.i] !== undefined) return panel(`<p class="prog">Мэтчей: ${o.matches.length}</p>${ticket(m)}<p class="msg">Ждём выбор партнёра…</p>${fin}`);
   app.innerHTML = `<section class="panel vote"><p class="prog">Мэтчей: ${o.matches.length}</p>${o.i === 0 ? hint(true) : ''}${swipe(m)}
@@ -268,7 +270,12 @@ function ovote(like) {
 function showMatch(m) {
   o.inMatch = true;
   panel(`<div class="match"><div class="heart">♥</div><h2 class="mt">Мэтч!</h2><p class="msg">Вам обоим хочется посмотреть этот фильм.</p>${ticket(m)}
-  <button class="btn" data-act="mnext">Искать дальше</button><button class="btn alt" data-act="finish">Закончить</button></div>`);
+  <button class="btn" data-act="mnext">Искать дальше</button><button class="btn alt" data-act="mlist">Мои мэтчи (${o.matches.length})</button><button class="btn alt" data-act="finish">Закончить подбор</button><p class="hint">Мэтчи сохраняются. Посмотреть их можно кнопкой «Мои мэтчи» или завершить подбор.</p></div>`);
+}
+
+function showList() {
+  o.inMatch = true;
+  panel(`<h3>Мои мэтчи: ${o.matches.length}</h3>${o.matches.map(ticket).join('')}<button class="btn" data-act="mnext">← Продолжить подбор</button>`);
 }
 
 function showFinal(note) {
@@ -332,6 +339,7 @@ const clickAll = e => {
   else if (a === 'kind') { s.kind = x; s.mood = s.preset = null; const kg = kindGenres(); s.genres = new Set([...s.genres].filter(id => kg.includes(id))); side(); }
   else if (a === 'mood') { if (s.mood === x) { s.mood = null; s.genres = new Set(); } else { s.mood = x; s.preset = null; s.genres = new Set(MOODS[x][s.kind === 'tv' ? 1 : 0]); } side(); }
   else if (a === 'preset') { if (s.preset === x) { s.preset = null; s.genres = new Set(); } else { const pr = PRESETS[x]; s.preset = x; s.mood = null; s.genres = new Set(pr.g); if (pr.era) s.era = pr.era; if (pr.rating) s.rating = pr.rating; } side(); }
+  else if (a === 'random') { s.mood = s.preset = null; s.genres = new Set(); side(); if (s.mode === 'online') create(); else go(); }
   else if (a === 'genre') { s.mood = s.preset = null; const id = +x; s.genres.has(id) ? s.genres.delete(id) : s.genres.add(id); side(); }
   else if (a === 'go') go();
   else if (a === 'create') create();
@@ -343,6 +351,7 @@ const clickAll = e => {
   else if (a === 'ono') ovote(false);
   else if (a === 'mnext') { o.inMatch = false; step(); }
   else if (a === 'finish') finish();
+  else if (a === 'mlist') showList();
   else if (a === 'next') { v.p = 1; v.i = 0; vote(); }
   else if (a === 'copy') { navigator.clipboard.writeText(x).then(() => b.textContent = 'Скопировано').catch(() => {}); }
 };
