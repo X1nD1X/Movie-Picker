@@ -103,14 +103,61 @@ const panel = h => app.innerHTML = `<section class="panel">${h}</section>`;
 const fail = msg => panel(`<p class="err">${esc(msg)}</p><button class="btn" data-act="back">Назад</button>`);
 function cleanup() { clearTimeout(joinTimer); try { conn && conn.close(); } catch (e) {} try { peer && peer.destroy(); } catch (e) {} conn = peer = v = o = null; }
 
-function ticket(m) {
+function ticket(m, withLinks = true) {
   const year = (m.release_date || '').slice(0, 4);
-  const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).map(n => '# ' + n).join(' ');
-  return `<article class="ticket"><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
-  <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc((KIND[m.k] || '') + ' ' + year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span class="tags">${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p></div></article>`;
-}
+  const title = m.title || m.name || '';
+  const query = [title, year].filter(Boolean).join(' ');
 
-function swipe(m) { return `<div class="card">${ticket(m)}<span class="tag lk">LIKE</span><span class="tag np">NOPE</span></div>`; }
+  const searchUrl =
+    'https://yandex.ru/search/?text=' +
+    encodeURIComponent(query);
+
+  const trailerUrl =
+    'https://www.youtube.com/results?search_query=' +
+    encodeURIComponent(query + ' трейлер');
+
+  const g = (m.genre_ids || [])
+    .map(id => NAMES[id])
+    .filter(Boolean)
+    .slice(0, 3)
+    .map(n => '# ' + n)
+    .join(' ');
+
+  const links = withLinks
+    ? `<nav class="movie-links" aria-label="Дополнительная информация">
+         <a href="${searchUrl}" target="_blank"
+            rel="noopener noreferrer">🔍 Найти</a>
+         <a href="${trailerUrl}" target="_blank"
+            rel="noopener noreferrer">▶ Трейлер</a>
+       </nav>`
+    : '';
+
+  return `
+    <article class="ticket">
+      <img
+        src="https://image.tmdb.org/t/p/w342${m.poster_path}"
+        alt="Постер: ${esc(title)}"
+        loading="lazy"
+      >
+
+      <div class="info">
+        <h3>${esc(title)}</h3>
+
+        <p class="meta">
+          <span>${esc((KIND[m.k] || '') + ' ' + year)}</span>
+          <span class="star">★ ${Number(m.vote_average).toFixed(1)}</span>
+          <span class="tags">${esc(g)}</span>
+        </p>
+
+        <p class="ov">${esc(m.overview)}</p>
+        ${links}
+      </div>
+    </article>
+  `;
+}
+function swipe(m) {
+  return `<div class="card">${ticket(m, false)}<span class="tag lk">LIKE</span><span class="tag np">NOPE</span></div>`;
+}
 const kindGenres = () => (s.kind === 'tv' ? Object.keys(GT) : Object.keys(GM)).map(Number).filter(id => s.kind !== 'anim' || id !== 16);
 function side() {
   const tv = s.kind === 'tv', kg = kindGenres(), ids = s.gtab === 'pop' ? POP[tv ? 'tv' : 'movie'].filter(id => kg.includes(id)) : kg, names = tv ? GT : GM;
