@@ -51,17 +51,17 @@ select,input[type=text]{background:var(--panel2);border:1px solid var(--line);bo
 .link{word-break:break-all;color:var(--muted);font-size:14px}
 footer{margin-top:28px;color:var(--muted);font-size:12px}
 .match{text-align:center}.match .mt{font:700 clamp(40px,12vw,72px)/1 Unbounded,sans-serif;color:var(--amber);margin:6px 0 4px;animation:pop .5s ease}.match .ticket{grid-template-columns:140px 1fr;text-align:left}.match .ov{display:block;-webkit-line-clamp:unset}@keyframes pop{0%{transform:scale(.6);opacity:0}100%{transform:scale(1);opacity:1}}@media(prefers-reduced-motion:reduce){.match .mt{animation:none}}
-.layout{display:block}#side h2:first-child{margin-top:0}.hero h2{font:700 clamp(22px,4vw,30px)/1.15 Unbounded,Onest,sans-serif;margin:0 0 10px;color:var(--text)}.card{position:relative;touch-action:pan-y;cursor:grab;user-select:none}.tag{position:absolute;top:16px;padding:4px 12px;border:3px solid;border-radius:8px;font:700 22px Unbounded,sans-serif;pointer-events:none;transform:rotate(-8deg);background:rgba(11,10,18,.6)}.lk{right:16px;color:var(--yes);opacity:var(--l,0)}.np{left:16px;color:var(--no);opacity:var(--n,0)}
+.layout{display:block}#side h2:first-child{margin-top:0}.hero h2{font:700 clamp(22px,4vw,30px)/1.15 Unbounded,Onest,sans-serif;margin:0 0 10px;color:var(--text)}.card{position:relative;touch-action:pan-y;cursor:grab;user-select:none}.tag{position:absolute;top:16px;padding:4px 12px;border:3px solid;border-radius:8px;font:700 14px Unbounded,sans-serif;pointer-events:none;transform:rotate(-8deg);background:rgba(11,10,18,.6)}.lk{right:16px;color:var(--yes);opacity:var(--l,0)}.np{left:16px;color:var(--no);opacity:var(--n,0)}
 @keyframes inR{from{transform:translateX(60px);opacity:0}}@keyframes inL{from{transform:translateX(-60px);opacity:0}}@keyframes outL{to{transform:translateX(-80px);opacity:0}}
 #side{animation:inL .4s ease}#side.leave{animation:outL .35s ease forwards}#app{animation:inR .4s ease}#bar{display:none}
-body:not(.play) #app{display:none}body.play #side{display:none}body.play #bar{display:block;margin-bottom:12px;animation:inR .4s ease}
-.barbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}.hint{margin:10px 0 0;color:var(--muted);font-size:14px;text-align:center}.tags{color:var(--pink)}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lnk{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;transition:transform .15s,filter .15s}.lnk:hover{transform:translateY(-1px);filter:brightness(1.12)}.lnk.f{background:var(--grad);color:#fff}.lnk.t{border:1px solid var(--pink);color:var(--pink);background:rgba(244,114,182,.08)}.steps{margin-bottom:14px}.nav{display:grid;grid-auto-flow:column;grid-auto-columns:1fr;gap:10px}.nav .btn{margin-top:18px}.rnd{width:100%;margin-top:14px;background:transparent;border:1px dashed var(--pink);color:var(--pink);border-radius:12px;padding:10px}
+body:not(.play) #app{display:none}body.play #side{display:none}body.play #bar{display:flex;justify-content:space-between;margin-bottom:12px;animation:inR .4s ease}
+.barbtn{background:transparent;border:1px solid var(--line);border-radius:999px;padding:6px 14px;color:var(--muted)}.hint{margin:10px 0 0;color:var(--muted);font-size:14px;text-align:center}.tags{color:var(--pink)}.links{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}.lnk{display:inline-flex;align-items:center;gap:6px;padding:7px 15px;border-radius:999px;font-size:14px;font-weight:600;text-decoration:none;transition:transform .15s,filter .15s}.lnk:hover{transform:translateY(-1px);filter:brightness(1.12)}.lnk.f{background:var(--grad);color:#fff}.lnk.t{border:1px solid var(--pink);color:var(--pink);background:rgba(244,114,182,.08)}.steps{margin-bottom:14px}.mob{display:block}.stp,.help{margin:0 0 12px;color:var(--muted);font-size:13px}.help{margin-bottom:10px}.sum{margin:18px 0 0;color:var(--muted);font-size:13px;text-align:center}.nav{display:flex;justify-content:space-between;align-items:center;margin-top:18px}.nxt{background:var(--blue);color:#0B1A33;border:0;border-radius:999px;padding:11px 20px;font-weight:700}.back{background:none;border:0;color:var(--muted);padding:11px 4px}.wait{margin:12px 0 0;text-align:center}.edges{display:none;justify-content:space-between;color:var(--muted);font-size:14px;margin:2px 4px 0}.card{border-radius:12px;box-shadow:0 0 calc(var(--l,0)*40px) rgba(63,182,139,calc(var(--l,0)*.7)),0 0 calc(var(--n,0)*40px) rgba(240,88,122,calc(var(--n,0)*.7))}.tch{display:none}.dsk{display:inline}@media(hover:none) and (pointer:coarse){.tch{display:inline}.dsk{display:none}.edges{display:flex}.vbtns{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap;margin:0}.card.nudge{animation:nudge 1.4s ease .6s 1}}@keyframes nudge{0%,100%{transform:none}25%{transform:translateX(-26px) rotate(-3deg)}75%{transform:translateX(26px) rotate(3deg)}}.intro{position:fixed;inset:0;z-index:20;background:rgba(5,4,10,.82);display:grid;place-items:center;padding:20px}.introbox{max-width:420px;background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:22px}.introbox h3{margin:0 0 12px;font-size:20px}.introbox ol{padding-left:20px;margin:0 0 6px}.introbox li{margin:8px 0}#jc{text-transform:uppercase;letter-spacing:.15em;font-weight:600}.rnd{width:100%;margin-top:14px;background:transparent;border:1px dashed var(--pink);color:var(--pink);border-radius:12px;padding:10px}
 .card{isolation:isolate;margin-bottom:16px}.card::before,.card::after{content:'';position:absolute;z-index:-1;border-radius:14px;background:var(--panel);border:1px solid var(--line)}.card::before{inset:8px 10px -8px}.card::after{inset:16px 22px -16px;opacity:.6}
 .heart{width:92px;height:92px;margin:0 auto 6px;border-radius:50%;background:var(--grad);display:grid;place-items:center;font-size:46px;color:#fff;animation:pop .5s ease}
 @media(prefers-reduced-motion:reduce){#side,#app,#bar,.heart{animation:none!important}}
 .sec{display:none}.sec.on{display:block}
-@media(min-width:900px){.sec{display:block}.sec+.sec{margin-top:20px}.steps,.nav{display:none}}
-.hello{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;text-align:center;background:var(--bg);font:700 clamp(28px,8vw,56px)/1.15 Unbounded,Onest,sans-serif;animation:hi 6.5s ease forwards;cursor:pointer}
+@media(min-width:900px){.sec{display:block}.sec+.sec{margin-top:20px}.steps,.nav,.mob{display:none}}
+.hello{position:fixed;inset:0;z-index:10;display:grid;place-items:center;padding:24px;text-align:center;background:var(--bg);font:700 clamp(28px,8vw,56px)/1.15 Unbounded,Onest,sans-serif;animation:hi 4s ease forwards;cursor:pointer}
 @keyframes hi{0%{opacity:0}15%{opacity:1}85%{opacity:1}100%{opacity:0;visibility:hidden}}
 @media(prefers-reduced-motion:reduce){.hello{animation:none}}
 @media(max-width:480px){.ticket{grid-template-columns:90px 1fr}.vote .ticket,.match .ticket{grid-template-columns:110px 1fr}.row,.names{grid-template-columns:1fr}}
@@ -71,7 +71,7 @@ body:not(.play) #app{display:none}body.play #side{display:none}body.play #bar{di
 <div id="hello" class="hello" role="status">Привет! Что посмотрим?</div>
 <div class="wrap">
 <header><h1>What We Watch?</h1><p class="sub">YOUR NEXT MOVIE STARTS HERE.</p></header>
-<div class="layout"><aside id="side" class="panel"></aside><div id="bar"><button class="barbtn" data-act="back">← Фильтры</button></div><main id="app"></main></div>
+<div class="layout"><aside id="side" class="panel"></aside><div id="bar"><button class="barbtn" data-act="back">← Фильтры</button><button class="barbtn" id="help" data-act="help" aria-label="Как это работает">?</button></div><main id="app"></main></div>
 <footer>Данные о фильмах: TMDB. Этот сайт использует API TMDB, но не одобрен и не сертифицирован TMDB.</footer>
 </div>
 <script src="https://cdn.jsdelivr.net/npm/peerjs@1.5.4/dist/peerjs.min.js"></script>
@@ -90,7 +90,18 @@ const RUNTIME = {'':['Любая',''],lt100:['До 100 мин','&with_runtime.lt
 const RATING = {'0':'Любой','6':'6 и выше','7':'7 и выше','8':'8 и выше'};
 const Y = new Date().getFullYear();
 const ERAS = {'':['Любые',''],old:['До 2000 года','&primary_release_date.lte=1999-12-31'],1970:['1970-е','&primary_release_date.gte=1970-01-01&primary_release_date.lte=1979-12-31'],1980:['1980-е','&primary_release_date.gte=1980-01-01&primary_release_date.lte=1989-12-31'],1990:['1990-е','&primary_release_date.gte=1990-01-01&primary_release_date.lte=1999-12-31'],2000:['2000-е','&primary_release_date.gte=2000-01-01&primary_release_date.lte=2009-12-31'],2010:['2010-е','&primary_release_date.gte=2010-01-01&primary_release_date.lte=2019-12-31'],2020:['2020-е','&primary_release_date.gte=2020-01-01&primary_release_date.lte=2029-12-31'],now:['Этот год ('+Y+')','&primary_release_date.gte='+Y+'-01-01&primary_release_date.lte='+Y+'-12-31']};
-const hint = on => `<p class="hint">Тяните карточку вправо — «хочу», влево — «не хочу». Или нажмите кнопки.${on ? ' Если хочется обоим, будет «Мэтч!».' : ''}</p>`;
+const hint = on => `<p class="hint"><span class="tch">Тяните карточку вправо — «нравится», влево — «не нравится».</span><span class="dsk">Нажмите «Нравится» или «Не нравится», работают и стрелки ← →.</span>${on ? ' Если понравилось обоим, будет «Мэтч!».' : ''}</p>`;
+const introHTML = on => `<div class="intro" id="intro" role="dialog" aria-modal="true" aria-label="Как это работает"><div class="introbox"><h3>Как это работает</h3><ol><li>${on ? 'Вы оба видите один и тот же фильм.' : 'Сначала выбирает первый игрок, потом телефон переходит ко второму.'}</li><li><span class="tch">Тяните карточку вправо — «нравится», влево — «не нравится».</span><span class="dsk">Нажимайте «Нравится» или «Не нравится», работают и стрелки ← →.</span></li><li>${on ? 'Если понравилось обоим, появится «Мэтч!».' : 'Фильмы, которые понравились обоим, попадут в совпадения.'}</li></ol><button class="btn" data-act="introok">Понятно</button></div></div>`;
+function showIntro(force, on) {
+  try {
+    if (!force && localStorage.getItem('wwy_intro_v1')) return;
+    if (document.getElementById('intro')) return;
+    document.body.insertAdjacentHTML('beforeend', introHTML(on));
+    document.getElementById('intro').addEventListener('click', clickAll);
+  } catch (e) {}
+}
+const pst = () => o.theirs[o.i] !== undefined ? 'партнёр уже выбрал ✓' : 'партнёр выбирает…';
+const paint = () => { try { const e = document.getElementById('pst'); if (e) e.textContent = pst(); } catch (err) {} };
 const KW = {movie: 'фильм', tv: 'сериал', anim: 'мультфильм'};
 const CLASSIC = '🎞 Классика';
 const ALPH = 'ABCDEFGHJKMNPQRSTUVWXYZ23456789', PFX = 'moviepick-';
@@ -112,18 +123,20 @@ function lnk(m) {
 }
 function ticket(m, links) {
   const year = (m.release_date || '').slice(0, 4);
-  const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).map(n => '# ' + n).join(' ');
+  const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).map(n => '#\u00a0' + n).join(' ');
   return `<article class="ticket"><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
   <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc((KIND[m.k] || '') + ' ' + year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span class="tags">${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p>${links ? lnk(m) : ''}</div></article>`;
 }
 
-function swipe(m) { return `<div class="card">${ticket(m)}<span class="tag lk">LIKE</span><span class="tag np">NOPE</span></div>`; }
+function swipe(m, first) { return `<div class="card${first ? ' nudge' : ''}">${ticket(m)}<span class="tag lk">НРАВИТСЯ</span><span class="tag np">НЕ НРАВИТСЯ</span></div><div class="edges"><span>← Не нравится</span><span>Нравится →</span></div>`; }
 const kindGenres = () => (s.kind === 'tv' ? Object.keys(GT) : Object.keys(GM)).map(Number).filter(id => s.kind !== 'anim' || id !== 16);
+const MODEH = {solo: 'Покажем список подходящих фильмов.', duo: 'Играете по очереди на одном телефоне, потом смотрите совпадения.', online: 'Каждый на своём устройстве, фильмы у вас одни и те же.'};
+const summary = (eff, names) => { const gn = [...eff].map(id => names[id] || NAMES[id]).filter(Boolean); return 'Подберём: ' + (gn.length ? gn.slice(0, 4).join(', ') + (gn.length > 4 ? '…' : '') : 'любые жанры') + ' · рейтинг: ' + RATING[s.rating].toLowerCase() + ' · годы: ' + ERAS[s.era][0].toLowerCase(); };
 function side() {
   const tv = s.kind === 'tv', online = s.mode === 'online', kg = kindGenres(), names = tv ? GT : GM;
   const btn = (act, v, label, on) => `<button data-act="${act}" data-v="${v}"${on === undefined ? '' : ` aria-pressed="${on}"`}>${label}</button>`;
   const sel = (key, map) => Object.entries(map).map(([k, a]) => `<option value="${k}" ${String(s[key]) === k ? 'selected' : ''}>${Array.isArray(a) ? a[0] : a}</option>`).join('');
-  const steps = [['kind', 'Что'], ['mood', 'Настроение'], ...(s.kind === 'movie' ? [['eve', 'Вечер']] : []), ['genre', 'Жанры'], ['more', 'Детали']];
+  const steps = [['kind', 'Формат'], ['mood', 'Настроение'], ...(s.kind === 'movie' ? [['eve', 'Вечер']] : []), ['genre', 'Жанры'], ['more', 'Детали']];
   s.step = Math.min(s.step, steps.length - 1);
   const eff = effSet(), cnt = {mood: s.moods.size, eve: s.presets.size, genre: eff.size}, cur = steps[s.step][0];
   const moods = Object.keys(MOODS).filter(n => MOODS[n][tv ? 1 : 0]), mlist = s.mtab === 'pop' ? MPOP.filter(n => moods.includes(n)) : moods;
@@ -131,21 +144,22 @@ function side() {
   const glist = [...gbase, ...[...new Set([...eff, ...s.removed])].filter(id => kg.includes(id) && !gbase.includes(id))];
   const tabs = (act, on, b) => `<div class="seg small" role="group" style="margin-bottom:10px">${btn(act, 'pop', 'Популярные', on === 'pop')}${btn(act, 'all', b, on === 'all')}</div>`;
   const body = {
-    kind: () => `<h2>Как выбираем</h2><div class="seg" role="group" aria-label="Режим">${[['solo', 'Один'], ['duo', 'Вдвоём (один экран)'], ['online', 'Вдвоём (онлайн)']].map(([k, n]) => btn('mode', k, n, s.mode === k)).join('')}</div>
+    kind: () => `<h2>Как выбираем</h2><div class="seg" role="group" aria-label="Режим">${[['solo', 'Один'], ['duo', 'Вдвоём (один экран)'], ['online', 'Вдвоём (онлайн)']].map(([k, n]) => btn('mode', k, n, s.mode === k)).join('')}</div><p class="help">${MODEH[s.mode]}</p>
       ${s.mode === 'duo' ? `<div class="names"><label>Первый<input type="text" data-name="0" value="${esc(s.names[0])}" placeholder="Игрок 1"></label><label>Второй<input type="text" data-name="1" value="${esc(s.names[1])}" placeholder="Игрок 2"></label></div>` : ''}
       ${online ? `<h2>Войти в комнату друга</h2><div class="keyrow"><input type="text" id="jc" maxlength="5" autocapitalize="characters" placeholder="Код комнаты" aria-label="Код комнаты"><button data-act="join">Войти</button></div><p class="msg" style="margin:10px 0 0">Или создайте свою комнату: настройте подбор и нажмите кнопку внизу.</p>` : ''}
       <h2>Что смотрим</h2><div class="seg" role="group">${[['movie', '🎬 Фильмы'], ['tv', '📺 Сериалы'], ['anim', '🎨 Мультфильмы']].map(([k, n]) => btn('kind', k, n, s.kind === k)).join('')}</div>`,
-    mood: () => `<h2>Настроение (можно несколько)</h2>${tabs('mtab', s.mtab, 'Все настроения')}<div class="chips">${mlist.map(n => btn('mood', n, n, s.moods.has(n))).join('')}</div><button class="rnd" data-act="random">🎲 Случайный ${KW[s.kind]}</button>`,
+    mood: () => `<h2>Настроение (можно несколько)</h2><p class="help">Настроение подсветит подходящие жанры.</p>${tabs('mtab', s.mtab, 'Все настроения')}<div class="chips">${mlist.map(n => btn('mood', n, n, s.moods.has(n))).join('')}</div><button class="rnd" data-act="random">🎲 Случайный ${KW[s.kind]}</button><p class="help" style="margin:6px 0 0">Без выбора жанров, сразу к подбору.</p>`,
     eve: () => `<h2>Тип вечера (можно несколько)</h2><p class="msg" style="margin:0 0 10px;font-size:13px">Вечер и настроение подсвечивают жанры ниже, их можно поправить.</p><div class="chips">${Object.keys(PRESETS).map(n => btn('preset', n, n, s.presets.has(n))).join('')}</div>`,
-    genre: () => `<h2>Жанры (можно несколько)</h2>${tabs('gtab', s.gtab, 'Все жанры')}<div class="chips">${glist.map(id => btn('genre', id, names[id], eff.has(id))).join('')}</div>`,
+    genre: () => `<h2>Жанры (можно несколько)</h2><p class="help">Подсветились жанры из настроения и вечера, их можно поправить.</p>${tabs('gtab', s.gtab, 'Все жанры')}<div class="chips">${glist.map(id => btn('genre', id, names[id], eff.has(id))).join('')}</div>`,
     more: () => `<h2>Детали</h2><div class="row">${tv ? '' : `<label>Длительность<select data-sel="runtime">${sel('runtime', RUNTIME)}</select></label>`}<label>Рейтинг TMDB<select data-sel="rating">${sel('rating', RATING)}</select></label><label>Годы выхода<select data-sel="era">${sel('era', ERAS)}</select></label></div>`
   };
-  $('#side').innerHTML = `<div class="seg small steps" role="group" aria-label="Шаги">${steps.map(([k, n], i) => btn('step', i, n + (cnt[k] ? ' (' + cnt[k] + ')' : ''), i === s.step)).join('')}</div>${steps.map(([k]) => `<section class="sec${k === cur ? ' on' : ''}">${body[k]()}</section>`).join('')}
-  <div class="nav">${s.step > 0 ? '<button class="btn alt" data-act="prev">← Назад</button>' : ''}${s.step < steps.length - 1 ? '<button class="btn alt" data-act="next">Дальше →</button>' : ''}</div>
-  <button class="go" data-act="${online ? 'create' : 'go'}">${online ? 'Создать комнату' : s.mode === 'duo' ? 'Начать голосование' : 'Подобрать фильмы'}</button>`;
+  $('#side').innerHTML = `<div class="seg small steps" role="group" aria-label="Шаги">${steps.map(([k, n], i) => btn('step', i, n + (cnt[k] ? ' (' + cnt[k] + ')' : ''), i === s.step)).join('')}</div><p class="stp mob">Шаг ${s.step + 1} из ${steps.length}</p>${steps.map(([k]) => `<section class="sec${k === cur ? ' on' : ''}">${body[k]()}</section>`).join('')}
+  <div class="nav">${s.step > 0 ? '<button class="back" data-act="prev">← Назад</button>' : '<span></span>'}${s.step < steps.length - 1 ? `<button class="nxt" data-act="next">Далее: ${steps[s.step + 1][1]} →</button>` : ''}</div>
+  <p class="sum">${summary(eff, names)}</p><button class="go" data-act="${online ? 'create' : 'go'}">${online ? 'Создать комнату' : s.mode === 'duo' ? 'Начать голосование' : 'Подобрать фильмы'}</button>`;
 }
 function enterPlay() {
   const b = document.body;
+  $('#help').hidden = s.mode === 'solo';
   $('#bar').firstChild.textContent = s.mode === 'online' ? '← Выйти из комнаты' : '← Фильтры';
   if (b.classList.contains('play')) return;
   $('#side').classList.add('leave');
@@ -234,14 +248,15 @@ async function go() {
 }
 
 function results(list) {
-  panel(`<p class="prog">Найдено: ${list.length}</p>${resetNote ? '<p class="msg">Вы посмотрели всё по этим фильтрам, начинаем сначала.</p>' : ''}${list.map(m => ticket(m, true)).join('')}
+  panel(`<p class="prog">Найдено: ${list.length}</p><p class="help" style="margin:4px 0 0">«Найти» откроет поиск по фильму, «Трейлер» — поиск трейлера.</p>${resetNote ? '<p class="msg">Вы посмотрели всё по этим фильтрам, начинаем сначала.</p>' : ''}${list.map(m => ticket(m, true)).join('')}
   <button class="btn" data-act="go">Подобрать другие</button><button class="btn alt" data-act="back">Изменить фильтры</button>`);
 }
 
 function vote() {
   const m = v.deck[v.i];
-  app.innerHTML = `<section class="panel vote"><p class="prog">${esc(v.online ? 'Ваш выбор' : nm(v.p))}: фильм ${v.i + 1} из ${v.deck.length}</p>${v.i === 0 && v.p === 0 ? hint(false) : ''}${swipe(m)}
-  <div class="vbtns"><button class="no" data-act="no">Не хочу</button><button class="yes" data-act="yes">Хочу</button></div></section>`;
+  app.innerHTML = `<section class="panel vote"><p class="prog">${esc(v.online ? 'Ваш выбор' : nm(v.p))}: фильм ${v.i + 1} из ${v.deck.length}</p>${v.i === 0 && v.p === 0 ? hint(false) : ''}${swipe(m, v.i === 0 && v.p === 0)}
+  <div class="vbtns"><button class="no" data-act="no">✕ Не нравится</button><button class="yes" data-act="yes">♥ Нравится</button></div></section>`;
+  if (v.i === 0 && v.p === 0) showIntro(false, false);
 }
 
 function showMatches(hit) {
@@ -290,10 +305,12 @@ function step() {
 
 function onv() {
   const m = o.q[o.i], fin = (o.matches.length ? '<button class="btn alt" data-act="mlist">Мои мэтчи (' + o.matches.length + ')</button>' : '') + '<button class="btn alt" data-act="finish">Закончить подбор</button>';
+  o.empty = !m;
   if (!m) return panel(`<p class="msg">${o.exhausted ? 'Фильмы по вашим условиям закончились.' : 'Загружаем следующие фильмы…'}</p>${fin}`);
-  if (o.mine[o.i] !== undefined) return panel(`<p class="prog">Мэтчей: ${o.matches.length}</p>${ticket(m)}<p class="msg">Ждём выбор партнёра…</p>${fin}`);
-  app.innerHTML = `<section class="panel vote"><p class="prog">Мэтчей: ${o.matches.length}</p>${o.i === 0 ? hint(true) : ''}${swipe(m)}
-  <div class="vbtns"><button class="no" data-act="ono">Не хочу</button><button class="yes" data-act="oyes">Хочу</button></div>${fin}</section>`;
+  if (o.mine[o.i] !== undefined) return panel(`<p class="prog">Мэтчей: ${o.matches.length}</p>${ticket(m)}<p class="wait">Вы выбрали: <b>${o.mine[o.i] ? 'Нравится ♥' : 'Не нравится ✕'}</b>. Партнёр ещё решает…</p>${fin}`);
+  app.innerHTML = `<section class="panel vote"><p class="prog">Мэтчей: ${o.matches.length} · <span id="pst">${pst()}</span></p>${o.i === 0 ? hint(true) : ''}${swipe(m, o.i === 0)}
+  <div class="vbtns"><button class="no" data-act="ono">✕ Не нравится</button><button class="yes" data-act="oyes">♥ Нравится</button></div>${fin}</section>`;
+  if (o.i === 0) showIntro(false, true);
 }
 
 function ovote(like) {
@@ -303,6 +320,7 @@ function ovote(like) {
 
 function showMatch(m) {
   o.inMatch = true;
+  try { navigator.vibrate && navigator.vibrate([70, 50, 140]); } catch (e) {}
   panel(`<div class="match"><div class="heart">♥</div><h2 class="mt">Мэтч!</h2><p class="msg">Вам обоим хочется посмотреть этот фильм.</p>${ticket(m, true)}
   <button class="btn" data-act="mnext">Искать дальше</button><button class="btn alt" data-act="mlist">Мои мэтчи (${o.matches.length})</button><button class="btn alt" data-act="finish">Закончить подбор</button><p class="hint">Мэтчи сохраняются. Посмотреть их можно кнопкой «Мои мэтчи» или завершить подбор.</p></div>`);
 }
@@ -321,11 +339,12 @@ function finish() { if (!o) return; o.finished = true; send({t: 'end'}); showFin
 function onData(m) {
   if (m.t === 'movies') {
     clearTimeout(joinTimer);
+    const first = !o;
     if (!o) o = newO(false);
     o.q.push(...m.list);
-    if (!o.inMatch && !o.finished) step();
+    if (!o.inMatch && !o.finished && (first || o.empty)) step();
   } else if (!o) return;
-  else if (m.t === 'vote') { o.theirs[m.i] = m.like; if (!o.inMatch && !o.finished) step(); }
+  else if (m.t === 'vote') { o.theirs[m.i] = m.like; if (!o.inMatch && !o.finished) { if (o.mine[o.i] === undefined && m.i === o.i) paint(); else step(); } }
   else if (m.t === 'exh') { o.exhausted = true; if (!o.inMatch && !o.finished) onv(); }
   else if (m.t === 'end') { if (!o.finished) { o.finished = true; showFinal('Партнёр закончил подбор.'); } }
 }
@@ -390,15 +409,17 @@ const clickAll = e => {
   else if (a === 'mnext') { o.inMatch = false; step(); }
   else if (a === 'finish') finish();
   else if (a === 'mlist') showList();
+  else if (a === 'help') showIntro(true, s.mode === 'online');
+  else if (a === 'introok') { const el = document.getElementById('intro'); if (el) el.remove(); try { localStorage.setItem('wwy_intro_v1', '1'); } catch (err) {} }
   else if (a === 'next') { v.p = 1; v.i = 0; vote(); }
   else if (a === 'copy') { navigator.clipboard.writeText(x).then(() => b.textContent = 'Скопировано').catch(() => {}); }
 };
 const changeAll = e => { const k = e.target.dataset.sel; if (!k) return; s[k] = e.target.value; if (k === 'era' && s.era !== 'old' && s.presets.delete(CLASSIC)) side(); };
-const inputAll = e => { if (e.target.dataset.name) s.names[+e.target.dataset.name] = e.target.value; };
+const inputAll = e => { if (e.target.id === 'jc') e.target.value = e.target.value.toUpperCase().replace(/\s/g, ''); if (e.target.dataset.name) s.names[+e.target.dataset.name] = e.target.value; };
 [app, $('#side'), $('#bar')].forEach(el => { el.addEventListener('click', clickAll); el.addEventListener('change', changeAll); el.addEventListener('input', inputAll); });
 
 let drag = null;
-app.addEventListener('pointerdown', e => { const c = e.target.closest('.card'); if (!c || e.target.closest('button')) return; drag = {c, x: e.clientX, dx: 0}; c.setPointerCapture(e.pointerId); c.style.transition = 'none'; });
+app.addEventListener('pointerdown', e => { const c = e.target.closest('.card'); if (e.pointerType === 'mouse' || !c || e.target.closest('button')) return; drag = {c, x: e.clientX, dx: 0}; try { c.setPointerCapture(e.pointerId); } catch (err) {} c.style.transition = 'none'; });
 app.addEventListener('pointermove', e => { if (!drag) return; drag.dx = e.clientX - drag.x; drag.c.style.transform = `translateX(${drag.dx}px) rotate(${drag.dx / 25}deg)`; drag.c.style.setProperty('--l', Math.max(0, drag.dx / 100)); drag.c.style.setProperty('--n', Math.max(0, -drag.dx / 100)); });
 const endDrag = () => { if (!drag) return; const {c, dx} = drag; drag = null; c.style.transition = 'transform .2s'; if (Math.abs(dx) > 90) { const b = document.querySelector(dx > 0 ? '.vbtns .yes' : '.vbtns .no'); if (b) b.click(); } else { c.style.transform = ''; c.style.setProperty('--l', 0); c.style.setProperty('--n', 0); } };
 app.addEventListener('pointerup', endDrag); app.addEventListener('pointercancel', endDrag);
@@ -408,7 +429,7 @@ const hello = $('#hello');
 hello.addEventListener('click', () => hello.remove());
 const hash = location.hash.slice(1);
 if (hash) { hello.remove(); s.mode = 'online'; join(hash); }
-else { setup(); setTimeout(() => hello.remove(), 6500); }
+else { setup(); setTimeout(() => hello.remove(), 4000); }
 </script>
 </body>
 </html>
