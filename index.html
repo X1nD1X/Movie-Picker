@@ -124,7 +124,9 @@ function lnk(m) {
 function ticket(m, links) {
   const year = (m.release_date || '').slice(0, 4);
   const g = (m.genre_ids || []).map(id => NAMES[id]).filter(Boolean).slice(0, 3).map(n => '#\u00a0' + n).join(' ');
-  return `<article class="ticket"><img src="https://image.tmdb.org/t/p/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
+  return `<article class="ticket">
+<img src="https://whattowatch.dbuyanov05.workers.dev/image/w342${m.poster_path}" alt="Постер: ${esc(m.title)}" loading="lazy">
+ alt="Постер: ${esc(m.title)}" loading="lazy">
   <div class="info"><h3>${esc(m.title)}</h3><p class="meta"><span>${esc((KIND[m.k] || '') + ' ' + year)}</span><span class="star">★ ${Number(m.vote_average).toFixed(1)}</span><span class="tags">${esc(g)}</span></p><p class="ov">${esc(m.overview)}</p>${links ? lnk(m) : ''}</div></article>`;
 }
 
