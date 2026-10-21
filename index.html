@@ -204,27 +204,105 @@ function buildUrl(page) {
 }
 const RAW = new Map();
 const getJson = async u => {
-  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 15000);
-  try {
-    const res = await fetch(u, {signal: ac.signal}), d = await res.json();
-    if (!res.ok) throw new Error(d.status_message || 'Ошибка ' + res.status);
-    return d;
-  } catch (e) { throw new Error(e.name === 'AbortError' ? 'сервер подбора не отвечает (возможно, провайдер ограничивает доступ)' : e.message); }
-  finally { clearTimeout(tm); }
+  let lastError;
+
+  for (let attempt = 0; attempt < 2; attempt++) {
+    const ac = new AbortController();
+    const tm = setTimeout(() => ac.abort(), 12000);
+
+    try {
+      const res = await fetch(u, { signal: ac.signal });
+      let d;
+      try {
+        d = await res.json();
+      } catch {
+        throw new Error('Сервер вернул некорректный ответ (HTTP ' + res.status + ')');
+      }
+
+      if (!res.ok) {
+        const error = new Error(d.status_message || 'Ошибка ' + res.status);
+        error.status = res.status;
+        throw error;
+      }
+
+      return d;
+    } catch (e) {
+      lastError = e;
+      const status = e.status;
+      const retryable = !status || status >= 500 || status === 408 || status === 429;
+
+      if (!retryable || attempt === 1) break;
+
+      await new Promise(resolve =>
+        setTimeout(resolve, 500 + Math.random() * 500)
+      );
+    } finally {
+      clearTimeout(tm);
+    }
+  }
+
+  throw new Error(
+    lastError?.name === 'AbortError'
+      ? 'сервер подбора не отвечает (тайм-аут запроса)'
+      : 'Не удалось загрузить данные: ' + (lastError?.message || 'неизвестная ошибка')
+  );
 };
+
 let NEED = 2, relaxed = false;
 async function fetchPage(page) {
   const url = buildUrl(page);
   let r = RAW.get(url);
+
   if (!r) {
-    const [a, b] = await Promise.all([getJson(url + '&part=1'), getJson(url + '&part=2')]), ids = new Set();
-    r = {total: a.total_pages || 0, list: [...(a.results || []), ...(b.results || [])].filter(m => m.poster_path && m.overview && !ids.has(m.id) && ids.add(m.id)).map(m => ({id: m.id, title: m.title || m.name, release_date: m.release_date || m.first_air_date, vote_average: m.vote_average, genre_ids: m.genre_ids || [], overview: m.overview, poster_path: m.poster_path, k: s.kind}))};
-    RAW.set(url, r);
+    const parts = await Promise.allSettled([
+      getJson(url + '&part=1'),
+      getJson(url + '&part=2')
+    ]);
+
+    const successful = parts
+      .filter(x => x.status === 'fulfilled')
+      .map(x => x.value);
+
+    if (!successful.length) {
+      throw new Error('Не удалось загрузить страницу ' + page);
+    }
+
+    const ids = new Set();
+    const total = successful[0].total_pages || 0;
+    const list = successful
+      .flatMap(x => x.results || [])
+      .filter(m =>
+        m.poster_path &&
+        m.overview &&
+        !ids.has(m.id) &&
+        ids.add(m.id)
+      )
+      .map(m => ({
+        id: m.id,
+        title: m.title || m.name,
+        release_date: m.release_date || m.first_air_date,
+        vote_average: m.vote_average,
+        genre_ids: m.genre_ids || [],
+        overview: m.overview,
+        poster_path: m.poster_path,
+        k: s.kind
+      }));
+
+    r = { total, list };
+
+    // Сохраняем в кеш только страницу, для которой загрузились обе части.
+    if (successful.length === 2) RAW.set(url, r);
   }
+
   lastTotal = r.total;
   const e = effSet(), ex = excluded(), need = Math.min(NEED, e.size);
-  return r.list.filter(m => m.genre_ids.filter(id => e.has(id)).length >= need && !m.genre_ids.some(id => ex.has(id)));
+
+  return r.list.filter(m =>
+    m.genre_ids.filter(id => e.has(id)).length >= need &&
+    !m.genre_ids.some(id => ex.has(id))
+  );
 }
+
 const SK = 'wwy_seen_v1', TTL = 30 * 864e5, sk = m => (m.k === 'tv' ? 't' : 'm') + m.id;
 let resetNote = false;
 function seenLoad() { try { const d = JSON.parse(localStorage.getItem(SK) || '{}'), now = Date.now(); for (const k in d) if (now - d[k] > TTL) delete d[k]; return d; } catch (e) { return {}; } }
@@ -236,19 +314,24 @@ function pager() {
 
   P.next = async () => {
     if (!P.pages) {
-      await fetchPage(1);
+      // Не даём старому поиску повлиять на число страниц нового поиска.
+      lastTotal = 0;
+
+      try {
+        await fetchPage(1);
+      } catch (e) {
+        console.warn('Не удалось сразу загрузить первую страницу:', e);
+      }
+
+      const total = Math.min(lastTotal || 25, 25);
       P.pages = shuffle(
-        Array.from({ length: Math.min(lastTotal, 25) }, (_, k) => k + 1)
+        Array.from({ length: total }, (_, k) => k + 1)
       );
     }
 
     while (P.pages.length) {
       const batch = P.pages.splice(0, 4);
-
-      const settled = await Promise.allSettled(
-        batch.map(fetchPage)
-      );
-
+      const settled = await Promise.allSettled(batch.map(fetchPage));
       const lists = [];
 
       settled.forEach((result, i) => {
@@ -267,21 +350,16 @@ function pager() {
           P.pages.push(page);
         } else {
           console.warn(
-            `Не удалось загрузить страницу ${page}:`,
+            `Не удалось загрузить страницу ${page} после повторной попытки:`,
             result.reason
           );
         }
       });
 
       const now = new Set();
-
       const list = lists.flat().filter(m => {
         const k = sk(m);
-
-        if (P.seen[k] || P.sess.has(k) || now.has(k)) {
-          return false;
-        }
-
+        if (P.seen[k] || P.sess.has(k) || now.has(k)) return false;
         now.add(k);
         return true;
       });
@@ -297,6 +375,7 @@ function pager() {
 
   return P;
 }
+
 async function fetchDeck(n) {
   const fill = async P => { const got = []; while (got.length < n) { const l = await P.next(); if (!l.length) break; got.push(...l); } return got; };
   const again = () => { const P = pager(); P.seen = {}; return fill(P); };
