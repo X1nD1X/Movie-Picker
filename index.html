@@ -229,17 +229,72 @@ const SK = 'wwy_seen_v1', TTL = 30 * 864e5, sk = m => (m.k === 'tv' ? 't' : 'm')
 let resetNote = false;
 function seenLoad() { try { const d = JSON.parse(localStorage.getItem(SK) || '{}'), now = Date.now(); for (const k in d) if (now - d[k] > TTL) delete d[k]; return d; } catch (e) { return {}; } }
 function mark(list) { try { const d = seenLoad(), now = Date.now(); list.forEach(m => d[sk(m)] = now); localStorage.setItem(SK, JSON.stringify(d)); } catch (e) {} }
+
 function pager() {
-  const P = {pages: null, seen: seenLoad(), sess: new Set()};
+  const P = { pages: null, seen: seenLoad(), sess: new Set() };
+  const attempts = new Map();
+
   P.next = async () => {
-    if (!P.pages) { await fetchPage(1); P.pages = shuffle(Array.from({length: Math.min(lastTotal, 25)}, (_, k) => k + 1)); }
-    while (P.pages.length) {
-      const lists = await Promise.all(P.pages.splice(0, 4).map(fetchPage)), now = new Set();
-      const list = lists.flat().filter(m => { const k = sk(m); if (P.seen[k] || P.sess.has(k) || now.has(k)) return false; now.add(k); return true; });
-      if (list.length) { list.forEach(m => P.sess.add(sk(m))); return shuffle(list); }
+    if (!P.pages) {
+      await fetchPage(1);
+      P.pages = shuffle(
+        Array.from({ length: Math.min(lastTotal, 25) }, (_, k) => k + 1)
+      );
     }
+
+    while (P.pages.length) {
+      const batch = P.pages.splice(0, 4);
+
+      const settled = await Promise.allSettled(
+        batch.map(fetchPage)
+      );
+
+      const lists = [];
+
+      settled.forEach((result, i) => {
+        const page = batch[i];
+
+        if (result.status === 'fulfilled') {
+          attempts.delete(page);
+          lists.push(result.value);
+          return;
+        }
+
+        const count = (attempts.get(page) || 0) + 1;
+        attempts.set(page, count);
+
+        if (count < 2) {
+          P.pages.push(page);
+        } else {
+          console.warn(
+            `Не удалось загрузить страницу ${page}:`,
+            result.reason
+          );
+        }
+      });
+
+      const now = new Set();
+
+      const list = lists.flat().filter(m => {
+        const k = sk(m);
+
+        if (P.seen[k] || P.sess.has(k) || now.has(k)) {
+          return false;
+        }
+
+        now.add(k);
+        return true;
+      });
+
+      if (list.length) {
+        list.forEach(m => P.sess.add(sk(m)));
+        return shuffle(list);
+      }
+    }
+
     return [];
   };
+
   return P;
 }
 async function fetchDeck(n) {
