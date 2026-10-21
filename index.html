@@ -233,7 +233,7 @@ function pager() {
   P.next = async () => {
     if (!P.pages) { await fetchPage(1); P.pages = shuffle(Array.from({length: Math.min(lastTotal, 25)}, (_, k) => k + 1)); }
     while (P.pages.length) {
-      const lists = await Promise.all(P.pages.splice(0, 2).map(fetchPage)), now = new Set();
+      const lists = await Promise.all(P.pages.splice(0, 4).map(fetchPage)), now = new Set();
       const list = lists.flat().filter(m => { const k = sk(m); if (P.seen[k] || P.sess.has(k) || now.has(k)) return false; now.add(k); return true; });
       if (list.length) { list.forEach(m => P.sess.add(sk(m))); return shuffle(list); }
     }
