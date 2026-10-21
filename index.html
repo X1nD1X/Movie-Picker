@@ -202,14 +202,22 @@ function buildUrl(page) {
     + (+s.rating ? `&vote_average.gte=${s.rating}` : '') + (gens ? `&with_genres=${gens}` : '') + (s.kind === 'movie' ? '&without_genres=16' : '') + (tv ? '' : RUNTIME[s.runtime][1]) + era;
 }
 const RAW = new Map();
+const getJson = async u => {
+  const ac = new AbortController(), tm = setTimeout(() => ac.abort(), 15000);
+  try {
+    const res = await fetch(u, {signal: ac.signal}), d = await res.json();
+    if (!res.ok) throw new Error(d.status_message || 'Ошибка ' + res.status);
+    return d;
+  } catch (e) { throw new Error(e.name === 'AbortError' ? 'сервер подбора не отвечает (возможно, провайдер ограничивает доступ)' : e.message); }
+  finally { clearTimeout(tm); }
+};
 let NEED = 2, relaxed = false;
 async function fetchPage(page) {
   const url = buildUrl(page);
   let r = RAW.get(url);
   if (!r) {
-    const res = await fetch(url), d = await res.json();
-    if (!res.ok) throw new Error(d.status_message || 'Ошибка ' + res.status);
-    r = {total: d.total_pages || 0, list: (d.results || []).filter(m => m.poster_path && m.overview).map(m => ({id: m.id, title: m.title || m.name, release_date: m.release_date || m.first_air_date, vote_average: m.vote_average, genre_ids: m.genre_ids || [], overview: m.overview, poster_path: m.poster_path, k: s.kind}))};
+    const [a, b] = await Promise.all([getJson(url + '&part=1'), getJson(url + '&part=2')]), ids = new Set();
+    r = {total: a.total_pages || 0, list: [...(a.results || []), ...(b.results || [])].filter(m => m.poster_path && m.overview && !ids.has(m.id) && ids.add(m.id)).map(m => ({id: m.id, title: m.title || m.name, release_date: m.release_date || m.first_air_date, vote_average: m.vote_average, genre_ids: m.genre_ids || [], overview: m.overview, poster_path: m.poster_path, k: s.kind}))};
     RAW.set(url, r);
   }
   lastTotal = r.total;
