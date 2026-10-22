@@ -4,6 +4,11 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Что смотрим сегодня?</title>
+<meta name="description" content="Подбор фильмов и сериалов под настроение: один, вдвоём с одного экрана или онлайн со свайпами и мэтчами.">
+<meta property="og:title" content="What We Watch? — подбор фильмов">
+<meta property="og:description" content="Свайпайте фильмы вдвоём и находите совпадения. Данные: TMDB.">
+<meta property="og:type" content="website">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🎬</text></svg>">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Onest:wght@400;500;600&family=Unbounded:wght@500;700&display=swap">
 <style>
@@ -426,7 +431,7 @@ function answer(like) {
   if (like) v.likes[v.p].add(v.deck[v.i].id);
   v.i++;
   if (v.i < v.deck.length) return vote();
-  if (v.p === 0) panel(`<p>${esc(nm(0))}, готово. Передайте устройство: ${esc(nm(1))}.</p><button class="btn" data-act="next">Я готов(а), начать</button>`);
+  if (v.p === 0) panel(`<p>${esc(nm(0))}, готово. Передайте устройство: ${esc(nm(1))}.</p><button class="btn" data-act="start2">Я готов(а), начать</button>`);
   else showMatches(v.deck.filter(m => v.likes[0].has(m.id) && v.likes[1].has(m.id)));
 }
 
@@ -568,10 +573,10 @@ const clickAll = e => {
   else if (a === 'mlist') showList();
   else if (a === 'help') showIntro(true, s.mode === 'online');
   else if (a === 'introok') { const el = document.getElementById('intro'); if (el) el.remove(); try { localStorage.setItem('wwy_intro_v1', '1'); } catch (err) {} }
-  else if (a === 'next') { v.p = 1; v.i = 0; vote(); }
+  else if (a === 'start2') { v.p = 1; v.i = 0; vote(); }
   else if (a === 'copy') { navigator.clipboard.writeText(x).then(() => b.textContent = 'Скопировано').catch(() => {}); }
 };
-const changeAll = e => { const k = e.target.dataset.sel; if (!k) return; s[k] = e.target.value; if (k === 'era' && s.era !== 'old' && s.presets.delete(CLASSIC)) side(); };
+const changeAll = e => { const k = e.target.dataset.sel; if (!k) return; s[k] = e.target.value; if (k === 'era' && s.era !== 'old') s.presets.delete(CLASSIC); side(); };
 const inputAll = e => { if (e.target.id === 'jc') e.target.value = e.target.value.toUpperCase().replace(/\s/g, ''); if (e.target.dataset.name) s.names[+e.target.dataset.name] = e.target.value; };
 [app, $('#side'), $('#bar')].forEach(el => { el.addEventListener('click', clickAll); el.addEventListener('change', changeAll); el.addEventListener('input', inputAll); });
 
@@ -583,10 +588,14 @@ app.addEventListener('pointerup', endDrag); app.addEventListener('pointercancel'
 document.addEventListener('keydown', e => { if ((e.key !== 'ArrowLeft' && e.key !== 'ArrowRight') || /INPUT|SELECT|TEXTAREA/.test(e.target.tagName)) return; const b = document.querySelector(e.key === 'ArrowRight' ? '.vbtns .yes' : '.vbtns .no'); if (b) b.click(); });
 
 const hello = $('#hello');
-hello.addEventListener('click', () => hello.remove());
+let seenHello = false;
+try { seenHello = !!localStorage.getItem('wwy_hello_v1'); } catch (e) {}
+const hideHello = () => { hello.remove(); try { localStorage.setItem('wwy_hello_v1', '1'); } catch (e) {} };
+hello.addEventListener('click', hideHello);
 const hash = location.hash.slice(1);
 if (hash) { hello.remove(); s.mode = 'online'; join(hash); }
-else { setup(); setTimeout(() => hello.remove(), 4000); }
+else if (seenHello) { hello.remove(); setup(); }
+else { setup(); setTimeout(hideHello, 4000); }
 </script>
 </body>
 </html>
